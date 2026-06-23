@@ -27,17 +27,22 @@ const tokenClass = (value: CellValue): string => {
 
 export const Board = ({ board, selectedCell, legalTargets, onCellClick }: BoardProps) => (
   <div className="relative mx-auto aspect-square w-full max-w-[420px] rounded-3xl border border-slate-200 bg-board-light p-8 shadow-xl dark:border-slate-800 dark:bg-board-dark">
-    <div className="pointer-events-none absolute inset-8">
-      <div className="absolute left-0 right-0 top-1/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-3/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-5/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-1/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-3/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-5/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute inset-0 rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
-      <div className="absolute inset-0 -rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
+    {/* Conteneur des lignes de repère */}
+    <div className="pointer-events-none absolute inset-8 border-2 border-slate-300 dark:border-slate-600">
+      {/* Ligne Horizontale Médiane */}
+      <div className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-slate-300 dark:bg-slate-600" />
+      
+      {/* Ligne Verticale Médiane */}
+      <div className="absolute bottom-0 top-0 left-1/2 w-[2px] -translate-x-1/2 bg-slate-300 dark:bg-slate-600" />
+      
+      {/* Diagonale 1 (Haut-Gauche vers Bas-Droite) */}
+      <div className="absolute top-1/2 left-1/2 h-[2px] w-[141.4%] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-slate-300 dark:bg-slate-600" />
+      
+      {/* Diagonale 2 (Bas-Gauche vers Haut-Droite) */}
+      <div className="absolute top-1/2 left-1/2 h-[2px] w-[141.4%] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-slate-300 dark:bg-slate-600" />
     </div>
 
+    {/* Grille des boutons de jeu */}
     <div className="relative grid h-full w-full grid-cols-3 grid-rows-3">
       {boardLayout.map(({ idx, row, col }) => {
         const selected = selectedCell === idx;
