@@ -8,55 +8,100 @@ interface BoardProps {
 }
 
 const boardLayout = [
-  { idx: 0, row: 1, col: 1 },
-  { idx: 1, row: 1, col: 2 },
-  { idx: 2, row: 1, col: 3 },
-  { idx: 3, row: 2, col: 1 },
-  { idx: 4, row: 2, col: 2 },
-  { idx: 5, row: 2, col: 3 },
-  { idx: 6, row: 3, col: 1 },
-  { idx: 7, row: 3, col: 2 },
-  { idx: 8, row: 3, col: 3 }
+  { idx: 0, row: 0, col: 0 },
+  { idx: 1, row: 0, col: 1 },
+  { idx: 2, row: 0, col: 2 },
+  { idx: 3, row: 1, col: 0 },
+  { idx: 4, row: 1, col: 1 },
+  { idx: 5, row: 1, col: 2 },
+  { idx: 6, row: 2, col: 0 },
+  { idx: 7, row: 2, col: 1 },
+  { idx: 8, row: 2, col: 2 }
 ];
 
-const tokenClass = (value: CellValue): string => {
-  if (value === "X") return "bg-indigo-500 border-indigo-300";
-  if (value === "O") return "bg-rose-500 border-rose-300";
-  return "bg-transparent border-slate-300/60 dark:border-slate-700";
+const point = (row: number, col: number) => ({
+  x: 12 + col * 38,
+  y: 12 + row * 38
+});
+
+const lines: Array<[number, number]> = [
+  [0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8],
+  [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8],
+  [0, 4], [4, 8], [2, 4], [4, 6]
+];
+
+const tokenStyle = (value: CellValue) => {
+  if (value === "X") return "bg-playerX border-playerX-soft";
+  if (value === "O") return "bg-playerO border-playerO-soft";
+  return "bg-transparent border-transparent";
 };
 
 export const Board = ({ board, selectedCell, legalTargets, onCellClick }: BoardProps) => (
-  <div className="relative mx-auto aspect-square w-full max-w-[420px] rounded-3xl border border-slate-200 bg-board-light p-8 shadow-xl dark:border-slate-800 dark:bg-board-dark">
-    <div className="pointer-events-none absolute inset-8">
-      <div className="absolute left-0 right-0 top-1/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-3/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-5/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-1/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-3/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-5/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute inset-0 rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
-      <div className="absolute inset-0 -rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
-    </div>
+  <div className="relative mx-auto aspect-square w-full max-w-[360px] rounded-3xl border border-wood-shadow bg-wood-grain p-6 shadow-card">
+    <svg
+      viewBox="0 0 100 100"
+      className="pointer-events-none absolute inset-6 h-[calc(100%-3rem)] w-[calc(100%-3rem)]"
+    >
+      {lines.map(([a, b], i) => {
+        const layoutA = boardLayout[a];
+        const layoutB = boardLayout[b];
+        const p1 = point(layoutA.row, layoutA.col);
+        const p2 = point(layoutB.row, layoutB.col);
+        const involvesSelected = selectedCell === a || selectedCell === b;
+        const involvesTarget = legalTargets.includes(a) || legalTargets.includes(b);
+        return (
+          <line
+            key={i}
+            x1={p1.x}
+            y1={p1.y}
+            x2={p2.x}
+            y2={p2.y}
+            stroke={involvesSelected && involvesTarget ? "#fbbf24" : "#3a2410"}
+            strokeOpacity={involvesSelected && involvesTarget ? 0.9 : 0.55}
+            strokeWidth={involvesSelected && involvesTarget ? 1.6 : 1.1}
+          />
+        );
+      })}
+    </svg>
 
     <div className="relative grid h-full w-full grid-cols-3 grid-rows-3">
       {boardLayout.map(({ idx, row, col }) => {
         const selected = selectedCell === idx;
         const isTarget = legalTargets.includes(idx);
+        const value = board[idx];
+        const ringShadow = selected
+          ? value === "O"
+            ? "shadow-glowPurple"
+            : "shadow-glowBlue"
+          : isTarget
+            ? "shadow-glowGreen"
+            : "";
         return (
           <button
             key={idx}
             type="button"
             aria-label={`Intersection ${idx + 1}`}
             onClick={() => onCellClick(idx)}
-            className={`relative flex items-center justify-center transition-all duration-200 [grid-row:${row}] [grid-column:${col}] ${
+            style={{ gridRow: row + 1, gridColumn: col + 1 }}
+            className={`relative flex items-center justify-center transition-transform duration-200 ${
               isTarget ? "scale-105" : ""
             }`}
           >
-            <span
-              className={`size-14 rounded-full border-4 shadow-md transition-all duration-200 sm:size-16 ${tokenClass(
-                board[idx]
-              )} ${selected ? "ring-4 ring-accent shadow-glow" : ""} ${isTarget ? "ring-4 ring-emerald-400" : ""}`}
-            />
+            {value ? (
+              <span
+                className={`flex size-12 items-center justify-center rounded-full border-[3px] text-sm font-bold text-white sm:size-14 ${tokenStyle(
+                  value
+                )} ${ringShadow}`}
+              >
+                {value}
+              </span>
+            ) : (
+              <span
+                className={`size-5 rounded-full border-2 border-amber-400/80 bg-amber-100/40 transition-all sm:size-6 ${
+                  isTarget ? `${ringShadow} scale-125` : ""
+                }`}
+              />
+            )}
           </button>
         );
       })}

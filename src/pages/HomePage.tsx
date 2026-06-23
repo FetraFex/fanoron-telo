@@ -5,20 +5,22 @@ import type { Difficulty, GameMode, GameOptions, Player } from "../types/game";
 
 interface HomePageProps {
   onStart: (options: GameOptions) => void;
-  onToggleTheme: () => void;
-  theme: "light" | "dark";
   stats: GameStats;
 }
 
-const modeLabels: Record<GameMode, string> = {
-  PVP: "Joueur vs Joueur",
-  PVAI: "Joueur vs IA",
-  AIVSAI: "IA vs IA (Demo)"
+const modeMeta: Record<GameMode, { label: string; sub: string; icon: string; ring: string; activeBg: string }> = {
+  PVP: { label: "Joueur vs Joueur", sub: "Affrontez un ami", icon: "👥", ring: "border-playerX shadow-glowBlue", activeBg: "bg-blue-50" },
+  PVAI: { label: "Joueur vs IA", sub: "Défiez l'ordinateur", icon: "🧑", ring: "border-good shadow-glowGreen", activeBg: "bg-green-50" },
+  AIVSAI: { label: "IA vs IA (Démo)", sub: "Regardez l'IA jouer", icon: "🤖", ring: "border-playerO shadow-glowPurple", activeBg: "bg-purple-50" }
 };
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
+const difficultyLabel: Record<Difficulty, string> = { easy: "Facile", medium: "Moyen", hard: "Difficile" };
 
-export const HomePage = ({ onStart, onToggleTheme, theme, stats }: HomePageProps) => {
+const selectClass =
+  "mt-1 w-full rounded-xl border border-panel-border bg-panel px-3 py-2 text-sm text-slate-700 focus:border-accent focus:outline-none";
+
+export const HomePage = ({ onStart, stats }: HomePageProps) => {
   const [mode, setMode] = useState<GameMode>("PVAI");
   const [humanSide, setHumanSide] = useState<Player>("X");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
@@ -27,14 +29,9 @@ export const HomePage = ({ onStart, onToggleTheme, theme, stats }: HomePageProps
 
   const handleStart = () => {
     if (mode === "PVP") {
-      onStart({
-        mode,
-        aiVsAiDelayMs: 420,
-        players: { X: { type: "human" }, O: { type: "human" } }
-      });
+      onStart({ mode, aiVsAiDelayMs: 420, players: { X: { type: "human" }, O: { type: "human" } } });
       return;
     }
-
     if (mode === "PVAI") {
       onStart({
         mode,
@@ -46,132 +43,112 @@ export const HomePage = ({ onStart, onToggleTheme, theme, stats }: HomePageProps
       });
       return;
     }
-
     onStart({
       mode,
       aiVsAiDelayMs: 420,
-      players: {
-        X: { type: "ai", difficulty: aiX },
-        O: { type: "ai", difficulty: aiO }
-      }
+      players: { X: { type: "ai", difficulty: aiX }, O: { type: "ai", difficulty: aiO } }
     });
   };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100">Fanoron-telo Arena</h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-            Jeu traditionnel malgache - placement, mouvement, alignement gagnant.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onToggleTheme}
-          className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          {theme === "dark" ? "Mode clair" : "Mode sombre"}
-        </button>
-      </header>
+    <main className="min-h-screen bg-slate-50">
+      <div className="relative overflow-hidden rounded-b-3xl bg-hero-leaves px-6 py-10 sm:px-10">
+        <div className="absolute inset-0 -z-10 bg-wood-grain opacity-20" />
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+          FANORONA
+          <span className="ml-2 text-warn">TELO</span>
+        </h1>
+      </div>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {(Object.keys(modeLabels) as GameMode[]).map((candidate) => (
-          <button
-            key={candidate}
-            type="button"
-            onClick={() => setMode(candidate)}
-            className={`rounded-2xl border p-4 text-left transition-all ${
-              mode === candidate
-                ? "border-accent bg-sky-50 shadow-glow dark:bg-sky-900/20"
-                : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900"
-            }`}
-          >
-            <p className="font-bold text-slate-900 dark:text-slate-100">{modeLabels[candidate]}</p>
-          </button>
-        ))}
-      </section>
-
-      {mode === "PVAI" && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Parametres IA</h2>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <label className="text-sm text-slate-700 dark:text-slate-200">
-              Cote humain
-              <select
-                value={humanSide}
-                onChange={(event) => setHumanSide(event.target.value as Player)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
-              >
-                <option value="X">X (commence)</option>
-                <option value="O">O</option>
-              </select>
-            </label>
-            <label className="text-sm text-slate-700 dark:text-slate-200">
-              Niveau IA
-              <select
-                value={difficulty}
-                onChange={(event) => setDifficulty(event.target.value as Difficulty)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
-              >
-                {difficulties.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
-            </label>
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <section>
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-500">Mode de jeu</h2>
+          <div className="grid gap-3 md:grid-cols-3">
+            {(Object.keys(modeMeta) as GameMode[]).map((candidate) => {
+              const meta = modeMeta[candidate];
+              const active = mode === candidate;
+              return (
+                <button
+                  key={candidate}
+                  type="button"
+                  onClick={() => setMode(candidate)}
+                  className={`rounded-2xl border p-4 text-left transition-all ${
+                    active ? `${meta.ring} ${meta.activeBg}` : "border-panel-border bg-panel-soft hover:border-slate-300"
+                  }`}
+                >
+                  <span className="text-2xl">{meta.icon}</span>
+                  <p className="mt-2 font-bold text-slate-800">{meta.label}</p>
+                  <p className="text-xs text-slate-500">{meta.sub}</p>
+                </button>
+              );
+            })}
           </div>
         </section>
-      )}
 
-      {mode === "AIVSAI" && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Configuration IA vs IA</h2>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <label className="text-sm text-slate-700 dark:text-slate-200">
-              IA X
-              <select
-                value={aiX}
-                onChange={(event) => setAiX(event.target.value as Difficulty)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
-              >
-                {difficulties.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm text-slate-700 dark:text-slate-200">
-              IA O
-              <select
-                value={aiO}
-                onChange={(event) => setAiO(event.target.value as Difficulty)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
-              >
-                {difficulties.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </section>
-      )}
+        {mode === "PVAI" && (
+          <section className="rounded-2xl border border-panel-border bg-panel-soft p-5 shadow-card">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">Paramètres IA</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <label className="text-sm text-slate-600">
+                Côté humain
+                <select value={humanSide} onChange={(e) => setHumanSide(e.target.value as Player)} className={selectClass}>
+                  <option value="X">X (commence)</option>
+                  <option value="O">O</option>
+                </select>
+              </label>
+              <label className="text-sm text-slate-600">
+                Niveau IA
+                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)} className={selectClass}>
+                  {difficulties.map((level) => (
+                    <option key={level} value={level}>
+                      {difficultyLabel[level]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </section>
+        )}
 
-      <footer>
+        {mode === "AIVSAI" && (
+          <section className="rounded-2xl border border-panel-border bg-panel-soft p-5 shadow-card">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">Configuration IA vs IA</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <label className="text-sm text-slate-600">
+                IA X
+                <select value={aiX} onChange={(e) => setAiX(e.target.value as Difficulty)} className={selectClass}>
+                  {difficulties.map((level) => (
+                    <option key={level} value={level}>
+                      {difficultyLabel[level]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm text-slate-600">
+                IA O
+                <select value={aiO} onChange={(e) => setAiO(e.target.value as Difficulty)} className={selectClass}>
+                  {difficulties.map((level) => (
+                    <option key={level} value={level}>
+                      {difficultyLabel[level]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </section>
+        )}
+
         <button
           type="button"
           onClick={handleStart}
-          className="rounded-xl bg-accent px-6 py-3 text-base font-bold text-white transition hover:bg-sky-600"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 text-base font-bold text-white shadow-glowBlue transition hover:bg-sky-500"
         >
-          Lancer la partie
+          Lancer la partie <span aria-hidden>▶</span>
         </button>
-      </footer>
 
-      <StatsPanel stats={stats} />
+        <StatsPanel stats={stats} />
+
+      </div>
     </main>
   );
 };

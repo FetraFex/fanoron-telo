@@ -13,11 +13,9 @@ interface GamePageProps {
   stats: GameStats;
   onGameFinished: (snapshot: GameSnapshot) => void;
   onBackHome: () => void;
-  onToggleTheme: () => void;
-  theme: "light" | "dark";
 }
 
-export const GamePage = ({ options, stats, onGameFinished, onBackHome, onToggleTheme, theme }: GamePageProps) => {
+export const GamePage = ({ options, stats, onGameFinished, onBackHome }: GamePageProps) => {
   const { snapshot, selectedCell, legalTargets, canUndo, canRedo, handleCellClick, undo, redo, restart } =
     useFanoronaGame(options);
   const reportedKeyRef = useRef<string>("");
@@ -34,31 +32,41 @@ export const GamePage = ({ options, stats, onGameFinished, onBackHome, onToggleT
   }, [snapshot, onGameFinished]);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100">Fanoron-telo - Partie en cours</h1>
+    <main className="flex min-h-screen flex-col bg-slate-50 lg:h-screen lg:overflow-hidden">
+      <header className="flex shrink-0 items-center justify-between border-b border-panel-border bg-panel px-4 py-3 sm:px-8">
         <button
           type="button"
-          onClick={onToggleTheme}
-          className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+          onClick={onBackHome}
+          className="flex size-9 items-center justify-center rounded-full border border-panel-border text-slate-600 transition hover:bg-panel-soft"
+          aria-label="Retour"
         >
-          {theme === "dark" ? "Mode clair" : "Mode sombre"}
+          ←
+        </button>
+        <h1 className="text-lg font-bold text-slate-800">
+          {options.mode === "PVP" ? "Joueur vs Joueur" : options.mode === "PVAI" ? "Joueur vs IA" : "IA vs IA"}
+        </h1>
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+        >
+          Abandonner
         </button>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="space-y-4">
-          <GameStatus snapshot={snapshot} players={options.players} />
-          <Board board={snapshot.board} selectedCell={selectedCell} legalTargets={legalTargets} onCellClick={handleCellClick} />
-          <GameControls canUndo={canUndo} canRedo={canRedo} onUndo={undo} onRedo={redo} onRestart={restart} onBackHome={onBackHome} />
-        </section>
-        <section className="space-y-4">
-          <MoveHistory moves={snapshot.moveHistory} />
-          <StatsPanel stats={stats} />
-          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200">
-            Mode: <span className="font-semibold">{options.mode}</span>
-          </div>
-        </section>
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-4 py-4 sm:px-6 lg:min-h-0 lg:overflow-hidden lg:px-8">
+        <div className="grid flex-1 gap-4 lg:min-h-0 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="flex flex-col gap-3 lg:min-h-0">
+            <GameStatus snapshot={snapshot} players={options.players} />
+            <Board board={snapshot.board} selectedCell={selectedCell} legalTargets={legalTargets} onCellClick={handleCellClick} />
+            <GameControls canUndo={canUndo} canRedo={canRedo} onUndo={undo} onRedo={redo} onRestart={restart} onBackHome={onBackHome} />
+          </section>
+
+          <section className="flex flex-col gap-3 lg:min-h-0">
+            <MoveHistory moves={snapshot.moveHistory} />
+            <StatsPanel stats={stats} />
+          </section>
+        </div>
       </div>
     </main>
   );

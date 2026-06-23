@@ -5,31 +5,42 @@ interface GameStatusProps {
   players: Record<"X" | "O", PlayerConfig>;
 }
 
-const playerBadge = (player: "X" | "O") =>
-  player === "X"
-    ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200"
-    : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200";
+const playerLook: Record<"X" | "O", { ring: string }> = {
+  X: { ring: "border-playerX shadow-glowBlue" },
+  O: { ring: "border-playerO shadow-glowPurple" }
+};
+
+const playerLabel = (config: PlayerConfig) =>
+  config.type === "ai" ? `IA (${config.difficulty === "easy" ? "Facile" : config.difficulty === "hard" ? "Difficile" : "Moyen"})` : "Vous";
 
 export const GameStatus = ({ snapshot, players }: GameStatusProps) => {
   const { winner, currentPlayer, phase, isDraw, piecesInHand } = snapshot;
 
-  let statusText = `Tour du joueur ${currentPlayer}`;
-  if (phase === "placement") statusText += " (Phase de placement)";
-  if (phase === "movement") statusText += " (Phase de mouvement)";
-  if (winner) statusText = `Victoire du joueur ${winner} !`;
-  if (isDraw) statusText = "Match nul (aucun mouvement légal)";
+  let phaseLabel = phase === "placement" ? "Phase de placement" : "Phase de mouvement";
+  if (winner) phaseLabel = `Victoire du joueur ${winner} !`;
+  if (isDraw) phaseLabel = "Match nul";
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70">
-      <p className="text-base font-semibold text-slate-800 dark:text-slate-100">{statusText}</p>
-      <div className="mt-3 flex flex-wrap gap-2 text-sm">
-        {(["X", "O"] as const).map((player) => (
-          <span key={player} className={`rounded-full px-3 py-1 font-medium ${playerBadge(player)}`}>
-            {player} - {players[player].type === "ai" ? `IA (${players[player].difficulty})` : "Humain"} - Pions a poser:{" "}
-            {piecesInHand[player]}
-          </span>
-        ))}
-      </div>
+    <section className="flex items-center justify-between gap-3 rounded-2xl border border-panel-border bg-panel-soft/80 px-4 py-3 shadow-card">
+      {(["X", "O"] as const).map((player, i) => (
+        <div key={player} className="flex items-center gap-2.5">
+          {i === 1 && (
+            <span className="mx-1 rounded-xl border border-panel-border bg-panel px-2.5 py-1.5 text-xs font-bold text-slate-500">
+              VS
+            </span>
+          )}
+          <div className={`flex size-9 items-center justify-center rounded-full border-2 bg-panel font-bold text-white ${playerLook[player].ring}`}>
+            {player}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-slate-800">{playerLabel(players[player])}</p>
+            <p className={`text-xs ${currentPlayer === player && !winner && !isDraw ? "text-good" : "text-slate-500"}`}>
+              {currentPlayer === player && !winner && !isDraw ? "Votre tour" : `Pions: ${piecesInHand[player]}`}
+            </p>
+          </div>
+        </div>
+      ))}
+      <span className="ml-auto rounded-full bg-panel-soft px-3 py-1 text-xs font-semibold text-slate-600">{phaseLabel}</span>
     </section>
   );
 };
