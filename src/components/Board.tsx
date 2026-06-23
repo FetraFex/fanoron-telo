@@ -19,47 +19,73 @@ const boardLayout = [
   { idx: 8, row: 3, col: 3 }
 ];
 
-const tokenClass = (value: CellValue): string => {
-  if (value === "X") return "bg-indigo-500 border-indigo-300";
-  if (value === "O") return "bg-rose-500 border-rose-300";
-  return "bg-transparent border-slate-300/60 dark:border-slate-700";
+export const Board = ({ board, selectedCell, legalTargets, onCellClick }: BoardProps) => {
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-[400px] rounded-2xl border-4 border-amber-900 bg-gradient-to-br from-amber-600 to-amber-800 p-4 shadow-2xl dark:border-stone-900 dark:from-stone-700 dark:to-stone-900">
+      
+      {/* LIGNES PYROGRAVÉES / CREUSÉES EN SVG */}
+      <svg 
+        className="pointer-events-none absolute inset-0 h-full w-full stroke-amber-950/80 drop-shadow-sm dark:stroke-stone-950/90" 
+        strokeWidth="5" 
+        strokeLinecap="round"
+      >
+        {/* Lignes horizontales */}
+        <line x1="16.66%" y1="16.66%" x2="83.33%" y2="16.66%" />
+        <line x1="16.66%" y1="50%"     x2="83.33%" y2="50%" />
+        <line x1="16.66%" y1="83.33%" x2="83.33%" y2="83.33%" />
+        
+        {/* Lignes verticales */}
+        <line x1="16.66%" y1="16.66%" x2="16.66%" y2="83.33%" />
+        <line x1="50%"     y1="16.66%" x2="50%"     y2="83.33%" />
+        <line x1="83.33%" y1="16.66%" x2="83.33%" y2="83.33%" />
+        
+        {/* Diagonales */}
+        <line x1="16.66%" y1="16.66%" x2="83.33%" y2="83.33%" />
+        <line x1="83.33%" y1="16.66%" x2="16.66%" y2="83.33%" />
+      </svg>
+
+      {/* INTERSECTIONS ET GALETS */}
+      <div className="relative grid h-full w-full grid-cols-3 grid-rows-3">
+        {boardLayout.map(({ idx, row, col }) => {
+          const value = board[idx];
+          const isSelected = selectedCell === idx;
+          const isTarget = legalTargets.includes(idx);
+
+          return (
+            <button
+              key={idx}
+              type="button"
+              aria-label={`Intersection ${idx + 1}`}
+              onClick={() => onCellClick(idx)}
+              className={`relative flex items-center justify-center transition-transform active:scale-90 [grid-row:${row}] [grid-column:${col}]`}
+            >
+              {/* GALET BLANC (Joueur X) */}
+              {value === "X" && (
+                <span className={`size-12 sm:size-14 rounded-full bg-gradient-to-b from-stone-100 to-stone-300 border border-stone-400 shadow-[inset_0_-4px_4px_rgba(0,0,0,0.15),0_6px_8px_rgba(0,0,0,0.5)] transition-all ${
+                  isSelected ? "ring-4 ring-offset-2 ring-offset-amber-700 ring-stone-200 scale-110 -translate-y-1 dark:ring-offset-stone-800" : ""
+                }`} />
+              )}
+
+              {/* GALET NOIR (Joueur O) */}
+              {value === "O" && (
+                <span className={`size-12 sm:size-14 rounded-full bg-gradient-to-b from-stone-700 to-stone-900 border border-stone-950 shadow-[inset_0_-4px_4px_rgba(0,0,0,0.4),0_6px_8px_rgba(0,0,0,0.6)] transition-all ${
+                  isSelected ? "ring-4 ring-offset-2 ring-offset-amber-700 ring-stone-500 scale-110 -translate-y-1 dark:ring-offset-stone-800" : ""
+                }`} />
+              )}
+
+              {/* CIBLE DE DÉPLACEMENT LÉGAL (Halo lumineux naturel) */}
+              {!value && isTarget && (
+                <span className="size-10 rounded-full bg-white/30 animate-pulse border-2 border-dashed border-white/60 shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
+              )}
+
+              {/* ENCOCHE VIDE (Creux dans le plateau) */}
+              {!value && !isTarget && (
+                <span className="size-4 rounded-full bg-amber-950/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] dark:bg-black/60" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
-
-export const Board = ({ board, selectedCell, legalTargets, onCellClick }: BoardProps) => (
-  <div className="relative mx-auto aspect-square w-full max-w-[420px] rounded-3xl border border-slate-200 bg-board-light p-8 shadow-xl dark:border-slate-800 dark:bg-board-dark">
-    <div className="pointer-events-none absolute inset-8">
-      <div className="absolute left-0 right-0 top-1/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-3/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute left-0 right-0 top-5/6 h-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-1/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-3/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute bottom-0 left-5/6 top-0 w-[2px] bg-slate-300 dark:bg-slate-600" />
-      <div className="absolute inset-0 rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
-      <div className="absolute inset-0 -rotate-45 border-t-[2px] border-slate-300 dark:border-slate-600" />
-    </div>
-
-    <div className="relative grid h-full w-full grid-cols-3 grid-rows-3">
-      {boardLayout.map(({ idx, row, col }) => {
-        const selected = selectedCell === idx;
-        const isTarget = legalTargets.includes(idx);
-        return (
-          <button
-            key={idx}
-            type="button"
-            aria-label={`Intersection ${idx + 1}`}
-            onClick={() => onCellClick(idx)}
-            className={`relative flex items-center justify-center transition-all duration-200 [grid-row:${row}] [grid-column:${col}] ${
-              isTarget ? "scale-105" : ""
-            }`}
-          >
-            <span
-              className={`size-14 rounded-full border-4 shadow-md transition-all duration-200 sm:size-16 ${tokenClass(
-                board[idx]
-              )} ${selected ? "ring-4 ring-accent shadow-glow" : ""} ${isTarget ? "ring-4 ring-emerald-400" : ""}`}
-            />
-          </button>
-        );
-      })}
-    </div>
-  </div>
-);

@@ -81,15 +81,27 @@ export const useFanoronaGame = (options: GameOptions): UseFanoronaGameResult => 
     return () => window.clearTimeout(timer);
   }, [isAiTurn, currentConfig.difficulty, snapshot, options.mode, options.aiVsAiDelayMs, commitMove]);
 
+  // SMART UNDO : Recule de 2 pas si on joue contre une IA pour ne pas se faire écraser
   const undo = () => {
     if (cursor === 0) return;
-    setCursor((prev) => prev - 1);
+    
+    if (options.mode === "PVAI" && cursor >= 2) {
+      setCursor((prev) => prev - 2);
+    } else {
+      setCursor((prev) => prev - 1);
+    }
     setSelectedCell(null);
   };
 
+  // SMART REDO : Avance de 2 pas si on joue contre une IA
   const redo = () => {
     if (cursor >= timeline.length - 1) return;
-    setCursor((prev) => prev + 1);
+
+    if (options.mode === "PVAI" && cursor <= timeline.length - 3) {
+      setCursor((prev) => prev + 2);
+    } else {
+      setCursor((prev) => prev + 1);
+    }
     setSelectedCell(null);
   };
 
@@ -102,8 +114,8 @@ export const useFanoronaGame = (options: GameOptions): UseFanoronaGameResult => 
   return {
     snapshot,
     selectedCell,
-    canUndo: cursor > 0,
-    canRedo: cursor < timeline.length - 1,
+    canUndo: options.mode === "PVAI" ? cursor >= 2 : cursor > 0,
+    canRedo: options.mode === "PVAI" ? cursor <= timeline.length - 3 : cursor < timeline.length - 1,
     legalTargets,
     handleCellClick,
     undo,
