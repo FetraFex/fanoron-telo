@@ -18,7 +18,6 @@ const modeLabels: Record<GameMode, string> = {
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
-// Professional Sun/Moon icons (inline SVGs)
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
     <circle cx="12" cy="12" r="5" />
@@ -87,7 +86,6 @@ export const HomePage = ({
 
   return (
     <div className={`min-h-screen ${isDark ? "bg-[#1a1a1a]" : "bg-[#f0f0f0]"}`}>
-      {/* Top navbar */}
       <header
         className={`border-b ${isDark ? "border-[#2d2d2d] bg-[#262626]" : "border-[#e0e0e0] bg-white"}`}
       >
@@ -114,7 +112,6 @@ export const HomePage = ({
         </div>
       </header>
 
-      {/* Rest of the page unchanged */}
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
           <h1

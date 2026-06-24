@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Board } from "../components/Board";
 import { GameControls } from "../components/GameControls";
 import { GameStatus } from "../components/GameStatus";
@@ -17,7 +17,7 @@ interface GamePageProps {
   theme: "light" | "dark";
 }
 
-// Icon components
+// --- Icons ---
 const BackIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
     <path d="M19 12H5" />
@@ -46,7 +46,6 @@ const RestartIcon = () => (
   </svg>
 );
 
-// Professional Sun/Moon icons
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
     <circle cx="12" cy="12" r="5" />
@@ -88,20 +87,23 @@ export const GamePage = ({
   } = useFanoronaGame(options);
   const reportedKeyRef = useRef<string>("");
 
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     if (snapshot.phase !== "finished") {
       reportedKeyRef.current = "";
+      setShowModal(false);
       return;
     }
     const key = `${snapshot.moveHistory.length}-${snapshot.winner ?? "draw"}`;
     if (reportedKeyRef.current === key) return;
     reportedKeyRef.current = key;
     onGameFinished(snapshot);
+    setShowModal(true);
   }, [snapshot, onGameFinished]);
 
   const isDark = theme === "dark";
 
-  // Colour palette
   const bg = isDark ? "bg-[#1a1a1a]" : "bg-[#f0f0f0]";
   const surface = isDark ? "bg-[#262626]" : "bg-white";
   const border = isDark ? "border-[#2d2d2d]" : "border-[#e0e0e0]";
@@ -109,9 +111,42 @@ export const GamePage = ({
   const textSecondary = isDark ? "text-[#8a8a8a]" : "text-[#6a6a6a]";
   const textMuted = isDark ? "text-[#b0b0b0]" : "text-[#4a4a4a]";
 
+  const getWinnerColors = () => {
+    if (snapshot.winner === "X") {
+      return {
+        bg: "bg-blue-600",
+        text: "text-white",
+        label: "X gagne !",
+      };
+    }
+    if (snapshot.winner === "O") {
+      return {
+        bg: "bg-rose-600",
+        text: "text-white",
+        label: "O gagne !",
+      };
+    }
+    return {
+      bg: "bg-gray-500",
+      text: "text-white",
+      label: "Match nul !",
+    };
+  };
+
+  const winner = getWinnerColors();
+
+  const handleRestartFromModal = () => {
+    setShowModal(false);
+    restart();
+  };
+
+  const handleBackHomeFromModal = () => {
+    setShowModal(false);
+    onBackHome();
+  };
+
   return (
     <div className={`min-h-screen ${bg}`}>
-      {/* Navbar */}
       <header className={`border-b ${border} ${surface}`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <button
@@ -149,7 +184,6 @@ export const GamePage = ({
         </div>
       </header>
 
-      {/* Main grid – unchanged */}
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           <div className="space-y-4">
@@ -258,6 +292,58 @@ export const GamePage = ({
           </div>
         </div>
       </div>
+
+      {/* ===== MODAL ===== */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+          <div
+            className={`relative max-w-md w-full mx-4 p-8 rounded-2xl shadow-2xl ${surface} border ${border} transform transition-all scale-100`}
+          >
+            <div
+              className={`-mx-8 -mt-8 mb-6 rounded-t-2xl px-8 py-4 ${winner.bg} ${winner.text} text-center`}
+            >
+              <h2 className="text-2xl font-bold">🏆 {winner.label}</h2>
+            </div>
+
+            <div className="space-y-4 text-center">
+              <p className={`text-lg ${textPrimary}`}>
+                Partie terminée en <span className="font-bold">{snapshot.moveHistory.length}</span> coups.
+              </p>
+              <p className={`text-sm ${textSecondary}`}>
+                {snapshot.winner
+                  ? `Le joueur ${snapshot.winner} remporte la victoire !`
+                  : "Personne ne marque, c'est un match nul."}
+              </p>
+            </div>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                onClick={handleRestartFromModal}
+                className={`flex-1 rounded-xl px-6 py-3 font-semibold transition shadow-md ${winner.bg} ${winner.text} hover:brightness-110 hover:shadow-lg`}
+              >
+                🔄 Rejouer
+              </button>
+              <button
+                onClick={handleBackHomeFromModal}
+                className={`flex-1 rounded-xl border ${border} px-6 py-3 font-semibold transition ${textPrimary} hover:bg-[#e8e8e8] dark:hover:bg-[#3d3d3d]`}
+              >
+                🏠 Accueil
+              </button>
+            </div>
+
+            <button
+              onClick={handleBackHomeFromModal}
+              className={`absolute right-4 top-4 rounded-full p-1.5 transition ${textMuted} hover:bg-[#e8e8e8] dark:hover:bg-[#3d3d3d]`}
+              aria-label="Fermer"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
