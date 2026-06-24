@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { CellValue } from "../../types/game";
 
 interface InGameBoardProps {
@@ -8,41 +8,49 @@ interface InGameBoardProps {
   onCellClick: (index: number) => void;
 }
 
+const P = 16.67;
+const M = 50;
+const Q = 83.33;
+
 const POSITIONS = [
-  { idx: 0, x: 16.67, y: 16.67 },
-  { idx: 1, x: 50, y: 16.67 },
-  { idx: 2, x: 83.33, y: 16.67 },
-  { idx: 3, x: 16.67, y: 50 },
-  { idx: 4, x: 50, y: 50 },
-  { idx: 5, x: 83.33, y: 50 },
-  { idx: 6, x: 16.67, y: 83.33 },
-  { idx: 7, x: 50, y: 83.33 },
-  { idx: 8, x: 83.33, y: 83.33 }
+  { idx: 0, left: `${P}%`, top: `${P}%` },
+  { idx: 1, left: `${M}%`, top: `${P}%` },
+  { idx: 2, left: `${Q}%`, top: `${P}%` },
+  { idx: 3, left: `${P}%`, top: `${M}%` },
+  { idx: 4, left: `${M}%`, top: `${M}%` },
+  { idx: 5, left: `${Q}%`, top: `${M}%` },
+  { idx: 6, left: `${P}%`, top: `${Q}%` },
+  { idx: 7, left: `${M}%`, top: `${Q}%` },
+  { idx: 8, left: `${Q}%`, top: `${Q}%` }
 ];
 
-const PIECE_RADIUS = 6.5;
+const SPAN = Q - P;
 
-const pieceFill = (value: CellValue, selected: boolean): string => {
-  if (value === "X") return "#2E2E2E";
-  if (value === "O") return "#F5EFE0";
-  return "transparent";
+const pieceClass = (value: CellValue, selected: boolean): string => {
+  if (value === "X") {
+    return selected
+      ? "bg-[#2E2E2E] shadow-[0_0_0_3px_#8CC63E,0_0_16px_rgba(140,198,62,0.4)]"
+      : "bg-[#2E2E2E] shadow-[0_2px_8px_rgba(0,0,0,0.3)]";
+  }
+  if (value === "O") {
+    return selected
+      ? "bg-[#F5EFE0] border-2 border-[#B37A4C] shadow-[0_0_0_3px_#8CC63E,0_0_16px_rgba(140,198,62,0.4)]"
+      : "bg-[#F5EFE0] border-2 border-[#B37A4C] shadow-[0_2px_8px_rgba(0,0,0,0.15)]";
+  }
+  return "bg-transparent";
 };
 
-const pieceStroke = (value: CellValue, selected: boolean): string => {
-  if (value === "O") return "#B37A4C";
-  return "none";
-};
-
-const pieceShadowClass = (value: CellValue, selected: boolean): string => {
-  if (value === "X") return selected ? "drop-shadow-[0_0_8px_rgba(140,198,62,0.5)]" : "drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]";
-  if (value === "O") return selected ? "drop-shadow-[0_0_8px_rgba(140,198,62,0.5)]" : "drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]";
-  return "";
+const LINE_STYLE: React.CSSProperties = {
+  position: "absolute",
+  background: "#1a1a1a",
+  opacity: 0.7,
+  pointerEvents: "none"
 };
 
 export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: InGameBoardProps) => {
   return (
     <div className="relative mx-auto w-full max-w-[55vh]" style={{ aspectRatio: "712/683" }}>
-      <div className="absolute inset-0 drop-shadow-lg">
+      <div className="absolute inset-0">
         <img
           src="/assets/ui/ui-board.png"
           alt=""
@@ -51,79 +59,67 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
         />
       </div>
 
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+        <div style={{ ...LINE_STYLE, left: `${P}%`, top: `${P}%`, width: `${SPAN}%`, height: "1px" }} />
+        <div style={{ ...LINE_STYLE, left: `${P}%`, top: `${M}%`, width: `${SPAN}%`, height: "1px" }} />
+        <div style={{ ...LINE_STYLE, left: `${P}%`, top: `${Q}%`, width: `${SPAN}%`, height: "1px" }} />
+        <div style={{ ...LINE_STYLE, top: `${P}%`, left: `${P}%`, height: `${SPAN}%`, width: "1px" }} />
+        <div style={{ ...LINE_STYLE, top: `${P}%`, left: `${M}%`, height: `${SPAN}%`, width: "1px" }} />
+        <div style={{ ...LINE_STYLE, top: `${P}%`, left: `${Q}%`, height: `${SPAN}%`, width: "1px" }} />
+      </div>
 
-        <g pointerEvents="none">
-          <line x1="16.67" y1="16.67" x2="83.33" y2="16.67" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="16.67" y1="50" x2="83.33" y2="50" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="16.67" y1="83.33" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="16.67" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="50" y1="16.67" x2="50" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="83.33" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="16.67" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-          <line x1="83.33" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        </g>
+      <div className="absolute inset-0" style={{ zIndex: 2, pointerEvents: "none" }}>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+          <line x1={P} y1={P} x2={Q} y2={Q} stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1={Q} y1={P} x2={P} y2={Q} stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+        </svg>
+      </div>
 
-        {POSITIONS.map(({ idx, x, y }) => {
+      <div className="absolute inset-0" style={{ zIndex: 3 }}>
+        {POSITIONS.map(({ idx, left, top }) => {
           const value = board[idx];
           const selected = selectedCell === idx;
           const isTarget = legalTargets.includes(idx);
           const isPossibleTarget = isTarget && value === null;
 
           return (
-          <g key={idx} className="pointer-events-auto cursor-pointer">
-            <circle cx={x} cy={y} r={PIECE_RADIUS + 2.5} fill="rgba(0,0,0,0.001)" onClick={() => onCellClick(idx)} />
+            <button
+              key={idx}
+              type="button"
+              aria-label={`Intersection ${idx + 1}`}
+              onClick={() => onCellClick(idx)}
+              className="absolute -translate-x-1/2 -translate-y-1/2"
+              style={{ left, top }}
+            >
+              <motion.span
+                className={`flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 ${pieceClass(value, selected)}`}
+                animate={selected ? { scale: [1, 1.12, 1.08] } : { scale: 1 }}
+                transition={selected ? { duration: 0.25, ease: [0.33, 1, 0.68, 1] } : { duration: 0.2 }}
+              >
+                <AnimatePresence>
+                  {isPossibleTarget && (
+                    <motion.span
+                      className="h-4 w-4 rounded-full bg-[#8CC63E]/40"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
+                    />
+                  )}
+                </AnimatePresence>
 
-            {isPossibleTarget && (
-              <circle cx={x} cy={y} r={2.5} fill="#8CC63E" opacity="0.4" />
-            )}
-
-            {value !== null && (
-              <>
-                <motion.circle
-                  cx={x}
-                  cy={y}
-                  r={PIECE_RADIUS}
-                  fill={pieceFill(value, selected)}
-                  stroke={pieceStroke(value, selected)}
-                  strokeWidth={pieceStroke(value, selected) !== "none" ? 0.4 : 0}
-                  filter={selected ? "url(#glow)" : undefined}
-                  className={pieceShadowClass(value, selected)}
-                  initial={false}
-                  animate={selected ? { r: PIECE_RADIUS + 1 } : { r: PIECE_RADIUS }}
-                  transition={selected ? { duration: 0.25, ease: [0.33, 1, 0.68, 1] } : { duration: 0.2 }}
-                />
-
-                {isTarget && value !== null && (
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={PIECE_RADIUS + 1.5}
-                    fill="none"
-                    stroke="#8CC63E"
-                    strokeWidth="0.3"
-                    opacity="0.6"
+                {value !== null && (
+                  <motion.span
+                    className="absolute inset-0 rounded-full"
+                    animate={isTarget ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+                    transition={isTarget ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : undefined}
                   />
                 )}
-              </>
-            )}
-          </g>
+              </motion.span>
+            </button>
           );
         })}
-      </svg>
+      </div>
     </div>
   );
 };
