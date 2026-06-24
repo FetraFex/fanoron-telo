@@ -95,7 +95,7 @@ export const GameScreen = ({
           <div className="relative z-[1] flex flex-1 items-stretch justify-center overflow-y-auto">
             <div className="flex w-full max-w-[65%] items-stretch gap-3">
               <motion.div
-                className="flex"
+                className="flex-1 flex"
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: easeOut, delay: 0.1 }}
@@ -122,7 +122,7 @@ export const GameScreen = ({
               </motion.div>
 
               <motion.div
-                className="flex"
+                className="flex-1 flex"
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: easeOut, delay: 0.1 }}
