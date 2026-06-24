@@ -1,156 +1,136 @@
-# Fanoron-telo Arena
+# 🤖 Projet Fanoron-telo Arena | ISPM
 
-Application web moderne du jeu traditionnel malgache **Fanoron-telo** (plateau 3x3), avec mode local, modes IA, historique des coups, undo/redo, mode sombre et demo IA vs IA.
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=00b4d8&height=200&section=header&text=Fanoron-telo%20Arena&fontSize=50&animation=fadeIn&fontAlignY=38" alt="Header Banner">
+</p>
 
-## 1) Presentation du projet
+<p align="center">
+  <a href="https://github.com/FetraFex/fanoron-telo">
+    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  </a>
+</p>
 
-Le jeu implemente exactement les 2 phases:
+## 👥 Présentation de l'Équipe
 
-- **Phase 1 - Placement**: chaque joueur pose 3 pions a tour de role.
-- **Phase 2 - Mouvement**: une fois les 6 pions poses, chaque joueur deplace un pion vers une intersection adjacente libre.
-- **Victoire**: premier alignement de 3 pions (ligne, colonne, diagonale), y compris pendant la phase de placement.
+|                                                 Photo                                                  | Informations Personnelles                 |  Classe  | N°  |
+| :----------------------------------------------------------------------------------------------------: | :---------------------------------------- | :------: | :-: |
+| <img src="https://avatars.githubusercontent.com/u/106149835?v=4" width="50" style="border-radius:50%"> | **RASOAMAHAZOMANANA** Tsitoniaina Rogella | IGGLIA 4 | 15  |
+| <img src="https://avatars.githubusercontent.com/u/171586866?v=4" width="50" style="border-radius:50%"> | **ANDRIAMAHEFA** Ny Fetra Phanoël         | IGGLIA 4 | 16  |
+| <img src="https://avatars.githubusercontent.com/u/144239227?v=4" width="50" style="border-radius:50%"> | **ANDRIANTSOA** Velotiana Todisoa Angelo  | IGGLIA 4 | 22  |
+| <img src="https://avatars.githubusercontent.com/u/110011721?v=4" width="50" style="border-radius:50%"> | **RAKOTOARISOA** Fanaja Manoa Ny Avo      | IGGLIA 4 | 32  |
+| <img src="https://avatars.githubusercontent.com/u/117814535?v=4" width="50" style="border-radius:50%"> | **NOMESAHANINA** Aiky                     | IGGLIA 4 | 35  |
+| <img src="https://avatars.githubusercontent.com/u/165788737?v=4" width="50" style="border-radius:50%"> | **ANDRIANARAHINJAKA** Yohannee Aintsoa    | IGGLIA 4 | 54  |
 
-Modes disponibles:
+---
 
-- Joueur vs Joueur (local)
-- Joueur vs IA (facile/moyen/difficile)
-- IA vs IA (demo automatique)
+## Description du Projet
 
-## 2) Architecture
+`Fanoron-telo Arena` est une application web moderne inspirée du jeu traditionnel malgache **Fanoron-telo** (plateau 3x3).  
+Le projet propose une expérience complète avec interface immersive, logique de jeu stricte et intelligence artificielle multi-niveaux.
+
+### Objectif du jeu implémenté
+
+- **Phase 1 - Placement** : chaque joueur pose ses 3 pions tour à tour.
+- **Phase 2 - Mouvement** : lorsque les 6 pions sont posés, chaque joueur déplace un pion vers une case adjacente libre.
+- **Condition de victoire** : aligner 3 pions (ligne, colonne ou diagonale), y compris durant la phase de placement.
+- **Match nul** : en phase de mouvement, si le joueur courant n'a aucun coup légal.
+
+---
+
+## Modes de Jeu Disponibles
+
+- **Joueur vs Joueur (PVP)** : jeu local sur le même écran.
+- **Joueur vs IA (PVAI)** : l'humain joue contre une IA configurable.
+- **IA vs IA (Demo)** : visualisation automatique d'une partie entre deux IA.
+
+---
+
+## Fonctionnalités Actuelles
+
+- Interface de menu stylisée avec sélection du mode de jeu.
+- Sélection de difficulté (`easy`, `medium`, `hard`) pour les modes avec IA.
+- Plateau interactif avec sélection des pièces et destinations légales.
+- Historique des coups en temps réel (barre déroulante).
+- Annulation du dernier coup (`Undo`) en partie.
+- Moteur de règles séparé et typé (`TypeScript`) pour une logique fiable.
+- Sauvegarde des statistiques de parties en `localStorage`.
+- Déploiement prêt pour Vercel (`vercel.json`).
+
+---
+
+## Intelligence Artificielle
+
+L'IA est implémentée avec trois comportements :
+
+- **Facile** : choix aléatoire parmi les coups légaux.
+- **Moyen** : Minimax profondeur 3.
+- **Difficile** : Minimax + Alpha-Beta + Iterative Deepening + table de transposition (budget temps).
+
+### Évaluation heuristique
+
+Le moteur combine :
+
+- évaluation des lignes gagnantes potentielles,
+- mobilité des joueurs (nombre de coups légaux),
+- score terminal fort en cas de victoire/défaite.
+
+---
+
+## Structure du Répertoire
 
 ```text
-src/
- ├─ components/     # UI reutilisable (Board, controls, historique, stats)
- ├─ pages/          # HomePage, GamePage
- ├─ hooks/          # useFanoronaGame, useTheme
- ├─ services/       # regles du jeu, stats
- ├─ ai/             # bots, minimax, evaluation
- ├─ models/         # modele plateau (adjacence, lignes gagnantes)
- ├─ utils/          # helpers
- └─ types/          # types TypeScript centraux
+root/
+├─ public/                 # Assets visuels (board, background, ui, audio)
+├─ src/
+│  ├─ ai/                  # Bots, minimax, evaluation
+│  ├─ components/          # UI (menu, écran de jeu, sidebars, historique)
+│  ├─ hooks/               # Hooks métier (useFanoronaGame, thème)
+│  ├─ models/              # Modèle du plateau (adjacence, lignes gagnantes)
+│  ├─ pages/               # Pages applicatives
+│  ├─ services/            # Règles du jeu, stats
+│  ├─ types/               # Types TypeScript centraux
+│  └─ utils/               # Helpers
+├─ vercel.json             # Configuration de déploiement
+└─ README.md
 ```
 
-Principes appliques:
+---
 
-- Separation claire UI / logique metier / IA
-- Etat de jeu immutable (snapshots pour undo/redo)
-- Hooks React personnalises pour orchestration
-- TypeScript strict pour robustesse
+## Stack Technique
 
-## 3) Technologies utilisees
+- **Frontend** : React 18 + TypeScript 5
+- **Build Tool** : Vite
+- **Styles** : TailwindCSS
+- **Qualité** : ESLint
 
-- React 18
-- TypeScript 5 (strict)
-- Vite 5
-- TailwindCSS 3
+---
 
-## 4) Installation (3 commandes max)
+## Installation et Lancement
 
 ```bash
-git clone URL_DU_DEPOT
+git clone git@github.com:FetraFex/fanoron-telo.git
+cd fanoron-telo
 npm install
 npm run dev
 ```
 
-Build production:
+### Scripts utiles
 
 ```bash
-npm run build
+npm run build   # Build production
+npm run preview # Preview du build
+npm run lint    # Vérification lint
 ```
 
-## 5) Outils IA utilises
+---
 
-### IA du jeu
+## Améliorations Possibles
 
-- **Facile**: choix aleatoire parmi les coups legaux.
-- **Moyen**: Minimax profondeur 3.
-- **Difficile**: Minimax + Alpha-Beta + iterative deepening + table de transposition.
+- Afficher les statistiques directement dans le menu principal.
+- Ajouter un bouton `Redo` visible dans l'interface.
+- Ajouter un mode en ligne (multijoueur distant).
+- Compléter la section captures d'écran et démo vidéo.
 
-### Outils de dev IA (hackathon)
+---
 
-- Assistance de generation et structuration via Cursor + modele Codex.
-
-## 6) Explication detaillee de Minimax
-
-Minimax explore l'arbre des coups possibles:
-
-1. Le joueur IA cherche a **maximiser** le score.
-2. L'adversaire est modele comme rationnel et cherche a **minimiser** ce score.
-3. La recherche s'arrete sur:
-   - etat terminal (victoire/defaite/nul),
-   - ou profondeur maximale.
-4. Une fonction d'evaluation heuristique note les etats non terminaux.
-
-Pseudo-logique:
-
-```text
-minimax(etat, profondeur, maximisant):
-  si terminal ou profondeur==0: retourner evaluation(etat)
-  si maximisant:
-    retourner max(minimax(enfant, profondeur-1, false))
-  sinon:
-    retourner min(minimax(enfant, profondeur-1, true))
-```
-
-## 7) Explication Alpha-Beta
-
-Alpha-Beta optimise Minimax sans changer le resultat final:
-
-- **alpha** = meilleure valeur deja garantie pour MAX
-- **beta** = meilleure valeur deja garantie pour MIN
-- Si `beta <= alpha`, on coupe la branche (pruning) car elle n'influencera plus la decision.
-
-Effet:
-
-- Meme qualite de decision
-- Beaucoup moins de noeuds explores
-- Temps de reponse significativement reduit
-
-## 8) Analyse des performances
-
-Le moteur IA utilise:
-
-- Representation compacte du plateau (tableau 9 cases)
-- Generation rapide des coups legaux via table d'adjacence
-- Detection terminale immediate (8 lignes gagnantes)
-- Table de transposition (`Map`) pour reutiliser les evaluations
-- Iterative deepening sur le niveau difficile (budget temps)
-
-Complexite (ordre de grandeur):
-
-- Facteur de branchement faible (<= ~12 selon phase)
-- Minimax depth 3: tres rapide
-- Alpha-Beta depth 7: viable en temps reel sur ce petit plateau
-
-## 9) Temps moyen de reponse de l'IA
-
-Valeurs observees/attendues en environnement dev standard:
-
-- **Facile**: < 1 ms
-- **Moyen (depth 3)**: ~2 a 15 ms
-- **Difficile (AB + ID)**: ~10 a 120 ms
-
-> Ces valeurs dependent de la machine et du navigateur.  
-> Le niveau difficile impose un budget temps pour rester fluide.
-
-## 10) Captures d'ecran a completer
-
-Ajouter vos captures dans `docs/screenshots/` puis referencer ici:
-
-- [ ] `home-light.png` - page d'accueil mode clair
-- [ ] `home-dark.png` - page d'accueil mode sombre
-- [ ] `pvp-game.png` - partie Joueur vs Joueur
-- [ ] `pvai-hard.png` - partie Joueur vs IA (difficile)
-- [ ] `ai-vs-ai.png` - demo IA vs IA
-
-## Fonctionnalites couvertes (hackathon)
-
-- [x] Regles completes des 2 phases
-- [x] Detection de victoire en placement et mouvement
-- [x] Historique des coups
-- [x] Undo / Redo
-- [x] Mode sombre
-- [x] Responsive mobile + desktop
-- [x] Animations UI (transitions Tailwind)
-- [x] Stats de parties (localStorage)
-- [x] Pret pour deploiement Vercel (`vercel.json`)
+<p align="right"><i>Dernière mise à jour : 24 juin 2026.</i></p>
