@@ -3,12 +3,10 @@ import { motion } from "framer-motion";
 interface PlayerCardProps {
   player: "X" | "O";
   label: string;
-  type: string;
   isActive: boolean;
-  piecesInHand: number;
 }
 
-export const PlayerCard = ({ player, label, type, isActive, piecesInHand }: PlayerCardProps) => {
+export const PlayerCard = ({ player, label, isActive }: PlayerCardProps) => {
   return (
     <motion.div
       className={`rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ${
@@ -30,9 +28,6 @@ export const PlayerCard = ({ player, label, type, isActive, piecesInHand }: Play
 
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold uppercase tracking-wide">{label}</p>
-          <p className={`mt-0.5 text-xs ${isActive ? "text-white/70" : "text-[#676767]"}`}>
-            {type === "ai" ? "IA" : "Humain"} — {piecesInHand} en main
-          </p>
         </div>
 
         {isActive && (

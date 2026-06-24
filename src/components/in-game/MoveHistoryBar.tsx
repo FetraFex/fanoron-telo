@@ -11,7 +11,7 @@ const formatMove = (move: Move): string => {
 
 export const MoveHistoryBar = ({ moves }: MoveHistoryBarProps) => {
   return (
-    <div className="mx-auto w-full max-w-[65%] rounded-2xl bg-[#2D2A24]/90 px-6 py-4 shadow-lg backdrop-blur-sm">
+    <div className="mx-auto w-full rounded-2xl bg-[#2D2A24]/90 px-4 py-3 shadow-lg backdrop-blur-sm lg:max-w-[65%] lg:px-6 lg:py-4">
       <h4 className="mb-2 text-center text-[10px] font-bold uppercase tracking-[2px] text-[#8CC63E]/60">
         Historique des coups
       </h4>

@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import type { GameSnapshot } from "../../types/game";
+import { PawnIcon } from "./PawnIcon";
+import { useSound } from "../../hooks/useSound";
 
 interface VictoryOverlayProps {
   snapshot: GameSnapshot;
@@ -10,6 +12,7 @@ interface VictoryOverlayProps {
 export const VictoryOverlay = ({ snapshot, onRestart, onBackHome }: VictoryOverlayProps) => {
   const { winner, isDraw } = snapshot;
   const show = winner !== null || isDraw;
+  const playSelection = useSound("/selection.wav");
 
   return (
     <AnimatePresence>
@@ -22,15 +25,17 @@ export const VictoryOverlay = ({ snapshot, onRestart, onBackHome }: VictoryOverl
           transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
         >
           <motion.div
-            className="flex flex-col items-center gap-6 rounded-3xl bg-[#F8F3EC] px-12 py-10 shadow-2xl"
+            className="mx-4 flex flex-col items-center gap-4 rounded-3xl bg-[#F8F3EC] px-6 py-8 shadow-2xl sm:gap-6 sm:px-12 sm:py-10"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
           >
-            <span className="text-5xl">{isDraw ? "🤝" : "👑"}</span>
-            <h2 className="text-2xl font-bold text-[#2E2E2E]">
-              {isDraw ? "Match nul !" : `${winner} a gagné !`}
+            <div className="flex items-center gap-2">
+              <span className="text-5xl">{isDraw ? "🤝" : "👑"}</span>
+            </div>
+            <h2 className="flex items-center gap-2 text-2xl font-bold text-[#2E2E2E]">
+              {isDraw ? "Match nul !" : <><PawnIcon player={winner!} size={24} /> a gagné !</>}
             </h2>
             <p className="text-sm text-[#676767]">
               {isDraw
@@ -40,7 +45,7 @@ export const VictoryOverlay = ({ snapshot, onRestart, onBackHome }: VictoryOverl
             <div className="flex gap-3">
               <motion.button
                 type="button"
-                onClick={onRestart}
+                onClick={() => { playSelection(); onRestart(); }}
                 className="rounded-xl bg-fanorona-green px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
@@ -50,7 +55,7 @@ export const VictoryOverlay = ({ snapshot, onRestart, onBackHome }: VictoryOverl
               </motion.button>
               <motion.button
                 type="button"
-                onClick={onBackHome}
+                onClick={() => { playSelection(); onBackHome(); }}
                 className="rounded-xl bg-[#264F2A] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}

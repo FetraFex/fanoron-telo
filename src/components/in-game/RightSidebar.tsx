@@ -1,5 +1,6 @@
 import type { GameSnapshot } from "../../types/game";
 import type { GameStats } from "../../services/statsService";
+import { PawnIcon } from "./PawnIcon";
 
 interface RightSidebarProps {
   snapshot: GameSnapshot;
@@ -13,11 +14,13 @@ interface RightSidebarProps {
 export const RightSidebar = ({ snapshot, selectedCell, moveCount, onUndo, canUndo, stats }: RightSidebarProps) => {
   const { phase, currentPlayer, winner, isDraw } = snapshot;
 
-  let statusText = `Tour du joueur ${currentPlayer === "X" ? "X" : "O"}`;
-  if (phase === "placement") statusText += " (Placement)";
-  if (phase === "movement") statusText += " (Mouvement)";
-  if (winner) statusText = `${winner === "X" ? "X" : "O"} a gagné !`;
-  if (isDraw) statusText = "Match nul";
+  const statusText = winner
+    ? `a gagné !`
+    : isDraw
+      ? "Match nul"
+      : phase === "placement"
+        ? "Placez un pion"
+        : "Jouez un coup";
 
   return (
     <div className="flex flex-1 flex-col gap-4">
@@ -25,7 +28,11 @@ export const RightSidebar = ({ snapshot, selectedCell, moveCount, onUndo, canUnd
         <h4 className="text-xs font-bold uppercase tracking-wider text-[#8CC63E]/80">
           {winner || isDraw ? "Partie terminée" : phase === "placement" ? "Placement" : "Tour"}
         </h4>
-        <p className="mt-2 text-lg font-bold text-white">{statusText}</p>
+        <div className="mt-2 flex items-center justify-center gap-2 text-lg font-bold text-white">
+          {winner && <PawnIcon player={winner} size={20} />}
+          {!winner && !isDraw && <PawnIcon player={currentPlayer} size={20} />}
+          <span>{statusText}</span>
+        </div>
         {!winner && !isDraw && (
           <p className="mt-1 text-xs text-white/60">
             {selectedCell !== null
@@ -61,11 +68,15 @@ export const RightSidebar = ({ snapshot, selectedCell, moveCount, onUndo, canUnd
             <span className="text-lg font-bold text-[#2E2E2E]">{stats.played}</span>
           </div>
           <div className="rounded-lg bg-white/60 px-3 py-2 text-center text-sm">
-            <span className="block text-[10px] uppercase tracking-wide text-[#676767]/70">X gagne</span>
+            <span className="flex items-center justify-center gap-1 text-[10px] uppercase tracking-wide text-[#676767]/70">
+              <PawnIcon player="X" size={12} /> gagne
+            </span>
             <span className="text-lg font-bold text-[#2E2E2E]">{stats.xWins}</span>
           </div>
           <div className="rounded-lg bg-white/60 px-3 py-2 text-center text-sm">
-            <span className="block text-[10px] uppercase tracking-wide text-[#676767]/70">O gagne</span>
+            <span className="flex items-center justify-center gap-1 text-[10px] uppercase tracking-wide text-[#676767]/70">
+              <PawnIcon player="O" size={12} /> gagne
+            </span>
             <span className="text-lg font-bold text-[#2E2E2E]">{stats.oWins}</span>
           </div>
           <div className="rounded-lg bg-white/60 px-3 py-2 text-center text-sm">

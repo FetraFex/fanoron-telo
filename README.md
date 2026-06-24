@@ -1,137 +1,166 @@
-# 🤖 Projet Fanoron-telo Arena | ISPM
+# Fanoron-telo Arena | ISPM
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=00b4d8&height=200&section=header&text=Fanoron-telo%20Arena&fontSize=50&animation=fadeIn&fontAlignY=38" alt="Header Banner">
-</p>
+## Section 1 : En-tête Institutionnel et Identification
 
-<p align="center">
-  <a href="https://github.com/FetraFex/fanoron-telo">
-    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  </a>
-</p>
+- Institut : [ISPM](https://www.ispm-edu.com)
+- Nom du groupe de projet : **NooAI**
 
-## 👥 Présentation de l'Équipe
-
-|                                                 Photo                                                  | Informations Personnelles                 |  Classe  | N°  |
-| :----------------------------------------------------------------------------------------------------: | :---------------------------------------- | :------: | :-: |
-| <img src="https://avatars.githubusercontent.com/u/106149835?v=4" width="50" style="border-radius:50%"> | **RASOAMAHAZOMANANA** Tsitoniaina Rogella | IGGLIA 4 | 15  |
-| <img src="https://avatars.githubusercontent.com/u/171586866?v=4" width="50" style="border-radius:50%"> | **ANDRIAMAHEFA** Ny Fetra Phanoël         | IGGLIA 4 | 16  |
-| <img src="https://avatars.githubusercontent.com/u/144239227?v=4" width="50" style="border-radius:50%"> | **ANDRIANTSOA** Velotiana Todisoa Angelo  | IGGLIA 4 | 22  |
-| <img src="https://avatars.githubusercontent.com/u/110011721?v=4" width="50" style="border-radius:50%"> | **RAKOTOARISOA** Fanaja Manoa Ny Avo      | IGGLIA 4 | 32  |
-| <img src="https://avatars.githubusercontent.com/u/117814535?v=4" width="50" style="border-radius:50%"> | **NOMESAHANINA** Aiky                     | IGGLIA 4 | 35  |
-| <img src="https://avatars.githubusercontent.com/u/160345626?v=4" width="50" style="border-radius:50%"> | **LAPORTE** Hantaharimanana Marie Fabia    | IGGLIA 4 | 53  |
-| <img src="https://avatars.githubusercontent.com/u/165788737?v=4" width="50" style="border-radius:50%"> | **ANDRIANARAHINJAKA** Yohannee Aintsoa    | IGGLIA 4 | 54  |
+| Nom Complet | Numéro d'étudiant | Classe | Rôle précis pour ce Hackathon |
+| :---------- | :---------------: | :----: | :--------------------------- |
+| ANDRIAMAHEFA Ny Fetra Phanoël | 16 | IGGLIA 4 | Lead développeur et designer d’expérience : architecte de l’interface, responsable du code principal et pilote de l’intégration visuelle. |
+| ANDRIANTSOA Velotiana Todisoa Angelo | 22 | IGGLIA 4 | Designer UI/UX senior : amélioration du parcours utilisateur, prototypes d’interaction et cohérence graphique sur mobile/desktop. |
+| NOMESAHANINA Aiky | 35 | IGGLIA 4 | Ingénieur moteur de jeu : responsable de la logique de placement, des règles de déplacement et de l’analyse des coups légaux. |
+| RAKOTOARISOA Fanaja Manoa Ny Avo | 32 | IGGLIA 4 | Expert tests et intégration : validation des règles, couverture des cas limites, coordination des flux de jeu et fiabilité. |
+| ANDRIANARAHINJAKA Yohannee Aintsoa | 54 | IGGLIA 4 | Responsable UI/IA : optimisation de l’interface utilisateur, ajustement des retours visuels et supervision de l’IA en jeu. |
+| RASOAMAHAZOMANANA Tsitoniaina Rogella | 15 | IGGLIA 4 | Lead IA : implémentation Minimax, stratégies de difficulté et tutorat IA pour l’équipe. |
+| LAPORTE Hantaharimanana Marie Fabia | 53 | IGGLIA 4 | Spécialiste UI et tests : polish visuel, accessibilité et vérification de la robustesse des interactions. |
 
 ---
 
-## Description du Projet
+## Section 2 : Description du Travail Réalisé
 
-`Fanoron-telo Arena` est une application web moderne inspirée du jeu traditionnel malgache **Fanoron-telo** (plateau 3x3).  
-Le projet propose une expérience complète avec interface immersive, logique de jeu stricte et intelligence artificielle multi-niveaux.
+`Fanoron-telo Arena` est une application web qui reproduit le jeu traditionnel malgache Fanoron-telo sur un plateau 3x3.
+Dans le délai, nous avons implémenté :
 
-### Objectif du jeu implémenté
+- un plateau interactif et une interface utilisateur responsive ;
+- trois modes de jeu : PVP, PVAI, IA vs IA ;
+- un moteur de règles séparé pour le placement, le déplacement et la détection de victoire ;
+- une IA configurable avec plusieurs niveaux de difficulté ;
+- un historique des coups et une fonction d'annulation du dernier coup.
 
-- **Phase 1 - Placement** : chaque joueur pose ses 3 pions tour à tour.
-- **Phase 2 - Mouvement** : lorsque les 6 pions sont posés, chaque joueur déplace un pion vers une case adjacente libre.
-- **Condition de victoire** : aligner 3 pions (ligne, colonne ou diagonale), y compris durant la phase de placement.
-- **Match nul** : en phase de mouvement, si le joueur courant n'a aucun coup légal.
+### Architecture
 
----
+- Application frontend en React 18 + TypeScript.
+- Build et serveur de développement avec Vite.
+- Styles avec TailwindCSS.
+- Organisation modulaire : `src/ai`, `src/components`, `src/services`, `src/models`, `src/utils`, `src/hooks`.
+- Règles de jeu centralisées dans `src/services/gameRules.ts`.
+- Algorithme IA dans `src/ai/minimax.ts` et `src/ai/evaluation.ts`.
 
-## Modes de Jeu Disponibles
+### Stack technologique
 
-- **Joueur vs Joueur (PVP)** : jeu local sur le même écran.
-- **Joueur vs IA (PVAI)** : l'humain joue contre une IA configurable.
-- **IA vs IA (Demo)** : visualisation automatique d'une partie entre deux IA.
+- React 18
+- TypeScript 5
+- Vite
+- TailwindCSS
+- ESLint
 
----
-
-## Fonctionnalités Actuelles
-
-- Interface de menu stylisée avec sélection du mode de jeu.
-- Sélection de difficulté (`easy`, `medium`, `hard`) pour les modes avec IA.
-- Plateau interactif avec sélection des pièces et destinations légales.
-- Historique des coups en temps réel (barre déroulante).
-- Annulation du dernier coup (`Undo`) en partie.
-- Moteur de règles séparé et typé (`TypeScript`) pour une logique fiable.
-- Sauvegarde des statistiques de parties en `localStorage`.
-- Déploiement prêt pour Vercel (`vercel.json`).
-
----
-
-## Intelligence Artificielle
-
-L'IA est implémentée avec trois comportements :
-
-- **Facile** : choix aléatoire parmi les coups légaux.
-- **Moyen** : Minimax profondeur 3.
-- **Difficile** : Minimax + Alpha-Beta + Iterative Deepening + table de transposition (budget temps).
-
-### Évaluation heuristique
-
-Le moteur combine :
-
-- évaluation des lignes gagnantes potentielles,
-- mobilité des joueurs (nombre de coups légaux),
-- score terminal fort en cas de victoire/défaite.
+### Hébergement
+ 
+Version hébergée : https://fanoron-telo-jade.vercel.app/
 
 ---
 
-## Structure du Répertoire
-
-```text
-root/
-├─ public/                 # Assets visuels (board, background, ui, audio)
-├─ src/
-│  ├─ ai/                  # Bots, minimax, evaluation
-│  ├─ components/          # UI (menu, écran de jeu, sidebars, historique)
-│  ├─ hooks/               # Hooks métier (useFanoronaGame, thème)
-│  ├─ models/              # Modèle du plateau (adjacence, lignes gagnantes)
-│  ├─ pages/               # Pages applicatives
-│  ├─ services/            # Règles du jeu, stats
-│  ├─ types/               # Types TypeScript centraux
-│  └─ utils/               # Helpers
-├─ vercel.json             # Configuration de déploiement
-└─ README.md
-```
-
----
-
-## Stack Technique
-
-- **Frontend** : React 18 + TypeScript 5
-- **Build Tool** : Vite
-- **Styles** : TailwindCSS
-- **Qualité** : ESLint
-
----
-
-## Installation et Lancement
+## Section 3 : Guide d'Installation Rapide (3 Commandes Max)
 
 ```bash
-git clone git@github.com:FetraFex/fanoron-telo.git
+git clone https://github.com/FetraFex/fanoron-telo.git
 cd fanoron-telo
 npm install
 npm run dev
 ```
 
-### Scripts utiles
+---
 
-```bash
-npm run build   # Build production
-npm run preview # Preview du build
-npm run lint    # Vérification lint
-```
+## Section 4 : Outils d'Aide IA Utilisés
+
+Nous avons utilisé des assistants IA pour accélérer le développement et vérifier la logique métier.
+
+- GitHub Copilot pour générer les composants React, les hooks et la structure des pages.
+- ChatGPT pour expliquer le fonctionnement du minimax, produire des exemples d’évaluation heuristique et détecter des cas limites.
+- Outils IA pour aider au débogage, à l’écriture d’algorithmes et à l’optimisation de code.
+
+Exemples d’utilisation :
+
+- écriture rapide de l’algorithme Minimax et de la boucle de recherche ;
+- création de tests de vérification des coups légaux ;
+- amélioration du CSS et de l’UX de l’interface de jeu.
 
 ---
 
-## Améliorations Possibles
+## Section 5 : Modélisation et Algorithmes de l'IA du Jeu
 
-- Afficher les statistiques directement dans le menu principal.
-- Ajouter un bouton `Redo` visible dans l'interface.
-- Ajouter un mode en ligne (multijoueur distant).
-- Compléter la section captures d'écran et démo vidéo.
+### Représentation de l’état du plateau
+
+- Le plateau est représenté comme un tableau 1D de 9 cases (`CellValue[]`) dans `src/models/board.ts`.
+- Les positions gagnantes (`WIN_LINES`) et la matrice d’adjacence (`ADJACENCY`) sont définies dans `src/models/board.ts`.
+- Les lignes gagnantes couvrent 3 lignes horizontales, 3 colonnes et 2 diagonales.
+- `ADJACENCY` décrit les cases vers lesquelles chaque position peut se déplacer en phase de mouvement.
+- Les constantes du plateau sont utilisées directement par `src/services/gameRules.ts` et par l’évaluation IA.
+
+### Fonctionnement du Minimax
+
+- L’IA est implémentée dans `src/ai/minimax.ts`.
+- `pickBestMove()` explore l’arbre des coups légaux à partir du snapshot courant.
+- La recherche est portée par `minimaxCore()` :
+  - cas terminal : victoire, match nul ou profondeur 0 ;
+  - exploration récursive des coups légaux obtenus via `getLegalMoves()` dans `src/services/gameRules.ts` ;
+  - score maximum pour l’IA quand elle joue, score minimum pour l’adversaire.
+- Les options de recherche sont paramétrées avec :
+  - `maxDepth` : profondeur de recherche ;
+  - `useAlphaBeta` : activation de l’élagage alpha-beta ;
+  - `timeLimitMs` : budget temps en millisecondes pour la recherche.
+
+### Fonction d’évaluation
+
+- L’évaluation est centralisée dans `src/ai/evaluation.ts`.
+- Si l’état est terminal, la fonction renvoie :
+  - `+1000` pour une victoire de l’IA ;
+  - `-1000` pour une défaite ;
+  - `0` pour un match nul.
+- Pour les positions non terminales :
+  - `lineScore()` dans `src/utils/gameHelpers.ts` calcule une heuristique sur chaque ligne gagnante possible ;
+  - la mobilité est mesurée par le nombre de coups légaux disponibles pour l’IA et l’adversaire via `getLegalMoves()` ;
+  - en phase de mouvement, la différence de mobilité est pondérée plus fortement.
+- `lineScore()` favorise les lignes proches du gain et pénalise celles contrôlées par l’adversaire.
+
+### Techniques avancées utilisées
+
+- Table de transposition légère :
+  - `transposition` est une `Map<string, CacheEntry>` dans `src/ai/minimax.ts` qui mémorise les scores déjà évalués.
+  - Les clés sont générées par `serializeSnapshot()` dans `src/services/gameRules.ts`, ce qui évite de recalculer les états déjà vus.
+- Iterative deepening :
+  - activé pour les recherches avec alpha-beta.
+  - le moteur relance la recherche de profondeur 1 à `maxDepth`, en conservant le meilleur coup trouvé à chaque itération.
+- Budget temps en mode difficile :
+  - `pickHardMove()` dans `src/ai/bots.ts` fixe `timeLimitMs: 450` ms.
+- Pas de bitboards ni d’ouverture prédéfinie dans cette version.
+- Pas de machine learning explicite : aucun apprentissage par renforcement ou classification n’est intégré.
 
 ---
 
-<p align="right"><i>Dernière mise à jour : 24 juin 2026.</i></p>
+## Section 6 : Analyses de Performances
+
+### Temps de réponse de l’IA
+
+- Mode `easy` : réponse instantanée car l’IA choisit un coup aléatoire parmi les coups légaux.
+- Mode `medium` : recherche Minimax jusqu’à profondeur 3 sans alpha-beta.
+  - Mesure réelle : environ **2,45 ms** par coup en moyenne sur un état de plateau initial.
+- Mode `hard` : recherche jusqu’à profondeur 7 avec alpha-beta et limite de temps de 450 ms.
+  - Mesure réelle : environ **26,87 ms** par coup en moyenne sur un état de plateau initial.
+- Le code limite explicitement la recherche à 450 ms pour éviter des blocages d’interface en mode difficile.
+
+### Mesure des valeurs
+
+- Les temps ont été mesurés avec un script local en Node.js (`measure-ia.cjs`).
+- Le script reconstitue le moteur Minimax à partir des mêmes règles et heuristiques que `src/ai/minimax.ts`, `src/ai/evaluation.ts` et `src/services/gameRules.ts`.
+- Les moyennes proviennent d’une trentaine d’itérations pour limiter la variance due aux fluctuations du système.
+- La mesure est faite côté terminal pour obtenir une estimation réaliste du coût de recherche avant rendu UI.
+
+### Statistiques d’IA vs IA
+
+- L’application propose un mode `AIVSAI` et enregistre les résultats globaux dans `src/services/statsService.ts`.
+- Les statistiques stockées sont : parties jouées, victoires X, victoires O, nuls.
+- Tests réalisés : `medium vs hard`, `hard vs hard`, `medium vs medium`, `hard vs medium`.
+- Résultat observé : dans ces tests, **le joueur qui joue en premier remporte systématiquement la partie**.
+- Cela indique un avantage important de l’ouverture dans le moteur actuel et suggère que les valeurs heuristiques du début de partie sont déterminantes.
+- Il n’existe pas de tableau de bord dédié aux statistiques IA vs IA par difficulté dans la version actuelle.
+
+### Observations
+
+- Les tests IA vs IA montrent que l’avantage du premier coup est très fort dans le moteur actuel.
+- L’IA difficile est plus coûteuse que l’IA moyenne, mais le budget de 450 ms permet un bon compromis entre qualité et réactivité.
+- Le constat que le joueur qui commence gagne toujours indique une faiblesse dans l’équilibre du début de partie ou dans la fonction d’évaluation heuristique.
+- Il est probable que les différences de profondeur (`medium` vs `hard`) soient masquées par cet avantage d’ouverture.
+- Pour un benchmark plus précis, il serait utile d’ajouter une instrumentation dédiée aux temps de recherche, aux coups joués et aux résultats par niveau.
+

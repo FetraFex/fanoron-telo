@@ -8,15 +8,15 @@ interface TurnBarProps {
 
 export const TurnBar = ({ turnNumber, piecesX, piecesO }: TurnBarProps) => {
   return (
-    <div className="flex h-[52px] items-center gap-6 rounded-full bg-[#F8F3EC]/90 px-8 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      <span className="flex items-center gap-2 text-sm font-semibold text-[#2E2E2E]">
-        <span className="h-3 w-3 rounded-full bg-[#2E2E2E]" />
-        {piecesX} pions
+    <div className="flex h-10 items-center gap-3 rounded-full bg-[#F8F3EC]/90 px-4 text-xs shadow-[0_2px_12px_rgba(0,0,0,0.06)] lg:h-[52px] lg:gap-6 lg:px-8 lg:text-sm">
+      <span className="flex items-center gap-1.5 font-semibold text-[#2E2E2E] lg:gap-2">
+        <span className="h-2.5 w-2.5 rounded-full bg-[#2E2E2E] lg:h-3 lg:w-3" />
+        {piecesX}
       </span>
 
       <motion.span
         key={turnNumber}
-        className="text-sm font-bold uppercase tracking-wider text-[#8B6A4A]"
+        className="font-bold uppercase tracking-wider text-[#8B6A4A]"
         initial={{ opacity: 0.6 }}
         animate={{
           opacity: 1,
@@ -31,9 +31,9 @@ export const TurnBar = ({ turnNumber, piecesX, piecesO }: TurnBarProps) => {
         Tour {turnNumber}
       </motion.span>
 
-      <span className="flex items-center gap-2 text-sm font-semibold text-[#2E2E2E]">
-        {piecesO} pions
-        <span className="h-3 w-3 rounded-full border border-[#B37A4C] bg-[#F5EFE0]" />
+      <span className="flex items-center gap-1.5 font-semibold text-[#2E2E2E] lg:gap-2">
+        {piecesO}
+        <span className="h-2.5 w-2.5 rounded-full border border-[#B37A4C] bg-[#F5EFE0] lg:h-3 lg:w-3" />
       </span>
     </div>
   );

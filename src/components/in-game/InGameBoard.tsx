@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CellValue } from "../../types/game";
 
@@ -6,6 +7,7 @@ interface InGameBoardProps {
   selectedCell: number | null;
   legalTargets: number[];
   onCellClick: (index: number) => void;
+  onAnimatingChange?: (animating: boolean) => void;
 }
 
 const P = 16.67;
@@ -47,9 +49,42 @@ const LINE_STYLE: React.CSSProperties = {
   pointerEvents: "none"
 };
 
-export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: InGameBoardProps) => {
+export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick, onAnimatingChange }: InGameBoardProps) => {
+  const prevBoard = useRef<CellValue[]>(board);
+  const [moveAnim, setMoveAnim] = useState<{ from: number; to: number; player: Exclude<CellValue, null> } | null>(null);
+
+  useEffect(() => {
+    if (moveAnim) return;
+
+    const prev = prevBoard.current;
+    let movingFrom: number | null = null;
+    let movingTo: number | null = null;
+    let player: CellValue = null;
+
+    for (let i = 0; i < 9; i++) {
+      if (prev[i] !== null && board[i] === null) {
+        movingFrom = i;
+        player = prev[i] as Exclude<CellValue, null>;
+      }
+      if (prev[i] === null && board[i] !== null) {
+        movingTo = i;
+      }
+    }
+
+    if (movingFrom !== null && movingTo !== null && player !== null) {
+      setMoveAnim({ from: movingFrom, to: movingTo, player });
+    }
+
+    prevBoard.current = board;
+  }, [board, moveAnim]);
+
+  useEffect(() => {
+    onAnimatingChange?.(moveAnim !== null);
+    return () => onAnimatingChange?.(false);
+  }, [moveAnim, onAnimatingChange]);
+
   return (
-    <div className="relative mx-auto w-full max-w-[55vh]" style={{ aspectRatio: "712/683" }}>
+    <div className="relative mx-auto w-full max-w-full lg:max-w-[55vh]" style={{ aspectRatio: "712/683" }}>
       <div className="absolute inset-0">
         <img
           src="/assets/ui/ui-board.png"
@@ -81,6 +116,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
           const selected = selectedCell === idx;
           const isTarget = legalTargets.includes(idx);
           const isPossibleTarget = isTarget && value === null;
+          const hidePiece = moveAnim !== null && (idx === moveAnim.from || idx === moveAnim.to);
 
           return (
             <button
@@ -92,7 +128,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
               style={{ left, top }}
             >
               <motion.span
-                className={`flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 ${pieceClass(value, selected)}`}
+                className={`flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 ${hidePiece ? "bg-transparent" : pieceClass(value, selected)}`}
                 animate={selected ? { scale: [1, 1.12, 1.08] } : { scale: 1 }}
                 transition={selected ? { duration: 0.25, ease: [0.33, 1, 0.68, 1] } : { duration: 0.2 }}
               >
@@ -108,7 +144,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
                   )}
                 </AnimatePresence>
 
-                {value !== null && (
+                {value !== null && !hidePiece && (
                   <motion.span
                     className="absolute inset-0 rounded-full"
                     animate={isTarget ? { scale: [1, 1.08, 1] } : { scale: 1 }}
@@ -120,6 +156,23 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
           );
         })}
       </div>
+
+      {moveAnim && (
+        <motion.div
+          className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
+          initial={{ left: POSITIONS[moveAnim.from].left, top: POSITIONS[moveAnim.from].top }}
+          animate={{ left: POSITIONS[moveAnim.to].left, top: POSITIONS[moveAnim.to].top }}
+          transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }}
+          onAnimationComplete={() => setMoveAnim(null)}
+        >
+          <motion.span
+            className={`flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 ${pieceClass(moveAnim.player, false)}`}
+            initial={{ scale: 1 }}
+            animate={{ scale: [1, 1.12, 1] }}
+            transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }}
+          />
+        </motion.div>
+      )}
     </div>
   );
 };
