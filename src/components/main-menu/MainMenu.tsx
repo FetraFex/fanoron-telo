@@ -4,7 +4,8 @@ import { BottomNav } from "./BottomNav";
 import { BoardSection } from "./BoardSection";
 import { LeavesOverlay } from "./LeavesOverlay";
 import { GameTitle } from "./GameTitle";
-import type { GameMode, GameOptions, Difficulty } from "../../types/game";
+import { DifficultySelection } from "./DifficultySelection";
+import type { GameMode, GameOptions } from "../../types/game";
 
 interface MainMenuProps {
   onStart: (options: GameOptions) => void;
@@ -69,6 +70,7 @@ function RobotIcon() {
 
 export const MainMenu = ({ onStart }: MainMenuProps) => {
   const [active, setActive] = useState<GameMode>("PVP");
+  const [screen, setScreen] = useState<"menu" | "difficulty">("menu");
 
   const handleStart = () => {
     if (active === "PVP") {
@@ -80,27 +82,18 @@ export const MainMenu = ({ onStart }: MainMenuProps) => {
       return;
     }
 
-    if (active === "PVAI") {
-      onStart({
-        mode: "PVAI",
-        aiVsAiDelayMs: 420,
-        players: {
-          X: { type: "human" },
-          O: { type: "ai", difficulty: "medium" as Difficulty }
-        }
-      });
-      return;
-    }
-
-    onStart({
-      mode: "AIVSAI",
-      aiVsAiDelayMs: 420,
-      players: {
-        X: { type: "ai", difficulty: "easy" as Difficulty },
-        O: { type: "ai", difficulty: "hard" as Difficulty }
-      }
-    });
+    setScreen("difficulty");
   };
+
+  if (screen === "difficulty") {
+    return (
+      <DifficultySelection
+        mode={active}
+        onStart={onStart}
+        onBack={() => setScreen("menu")}
+      />
+    );
+  }
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-fanorona-bg">

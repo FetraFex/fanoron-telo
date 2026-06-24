@@ -1,0 +1,76 @@
+.menu-btn {
+  position: relative;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    transparent 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 120ms ease;
+}
+
+.menu-btn:hover::before { opacity: 0.5; }
+.menu-btn:active::before { opacity: 0.15; }
+
+.btn-active {
+  background: linear-gradient(
+    160deg,
+    #6B7F57 0%,
+    #4C5F3C 30%,
+    #344929 65%,
+    #23371A 100%
+  );
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    0 2px 0 #131F0E,
+    0 4px 14px rgba(35, 55, 26, 0.50);
+  animation: morph-breathe 5s ease-in-out infinite;
+  transition:
+    background 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.menu-btn:not(.btn-active):hover {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 0 #131F0E;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.menu-btn:not(.btn-active):active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 3px 10px rgba(0, 0, 0, 0.40),
+    0 0px 0 #131F0E;
+  transition: transform 40ms ease, box-shadow 40ms ease;
+}
+
+@keyframes morph-breathe {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-active {
+    animation: none;
+    background-position: 0% 0%;
+  }
+}
