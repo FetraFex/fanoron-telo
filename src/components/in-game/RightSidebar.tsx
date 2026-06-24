@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { GameSnapshot } from "../../types/game";
 import type { GameStats } from "../../services/statsService";
 

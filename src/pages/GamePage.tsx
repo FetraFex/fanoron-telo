@@ -11,11 +11,9 @@ interface GamePageProps {
   onToggleMute: () => void;
   onGameFinished: (snapshot: GameSnapshot) => void;
   onBackHome: () => void;
-  onToggleTheme: () => void;
-  theme: "light" | "dark";
 }
 
-export const GamePage = ({ options, stats, muted, onToggleMute, onGameFinished, onBackHome, onToggleTheme, theme }: GamePageProps) => {
+export const GamePage = ({ options, stats, muted, onToggleMute, onGameFinished, onBackHome }: GamePageProps) => {
   const { snapshot, selectedCell, legalTargets, canUndo, canRedo, handleCellClick, undo, redo, restart } =
     useFanoronaGame(options);
   const reportedKeyRef = useRef<string>("");

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { pickMoveByDifficulty } from "../ai/bots";
 import { applyMove, createInitialSnapshot, getLegalMoves } from "../services/gameRules";
-import type { GameOptions, GameSnapshot, LegalMove, Player } from "../types/game";
+import type { GameOptions, GameSnapshot, LegalMove } from "../types/game";
 
 interface UseFanoronaGameResult {
   snapshot: GameSnapshot;

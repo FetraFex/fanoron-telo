@@ -28,7 +28,7 @@ interface GameScreenProps {
   onBackHome: () => void;
 }
 
-const easeOut = [0.33, 1, 0.68, 1];
+const easeOut: [number, number, number, number] = [0.33, 1, 0.68, 1];
 
 export const GameScreen = ({
   snapshot,
@@ -46,7 +46,7 @@ export const GameScreen = ({
   onRestart,
   onBackHome,
 }: GameScreenProps) => {
-  const { currentPlayer, piecesInHand, moveHistory } = snapshot;
+  const { piecesInHand, moveHistory } = snapshot;
 
   return (
     <div className="relative flex h-screen w-screen flex-col overflow-hidden bg-[#F4EFE6]">
@@ -76,12 +76,11 @@ export const GameScreen = ({
             transition={{ duration: 0.4, ease: easeOut, delay: 0.1 }}
           />
 
-          <TurnBar
-            currentPlayer={currentPlayer}
-            turnNumber={moveHistory.length + 1}
-            piecesX={piecesInHand.X}
-            piecesO={piecesInHand.O}
-          />
+            <TurnBar
+              turnNumber={moveHistory.length + 1}
+              piecesX={piecesInHand.X}
+              piecesO={piecesInHand.O}
+            />
 
           <div className="justify-self-end flex items-center gap-2">
             <motion.button

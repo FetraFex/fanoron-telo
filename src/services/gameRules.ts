@@ -26,7 +26,7 @@ export const getLegalMoves = (snapshot: GameSnapshot, player = snapshot.currentP
     if (snapshot.piecesInHand[player] <= 0) return [];
     return board
       .map((cell, index) => (cell === null ? { from: null, to: index } : null))
-      .filter((move): move is LegalMove => move !== null);
+      .filter((move) => move !== null) as LegalMove[];
   }
 
   const moves: LegalMove[] = [];

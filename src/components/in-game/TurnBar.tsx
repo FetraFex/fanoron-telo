@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
 
 interface TurnBarProps {
-  currentPlayer: "X" | "O";
   turnNumber: number;
   piecesX: number;
   piecesO: number;
 }
 
-export const TurnBar = ({ currentPlayer, turnNumber, piecesX, piecesO }: TurnBarProps) => {
+export const TurnBar = ({ turnNumber, piecesX, piecesO }: TurnBarProps) => {
   return (
     <div className="flex h-[52px] items-center gap-6 rounded-full bg-[#F8F3EC]/90 px-8 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       <span className="flex items-center gap-2 text-sm font-semibold text-[#2E2E2E]">
