@@ -11,7 +11,7 @@ export const pickEasyMove = (snapshot: GameSnapshot): LegalMove | null => {
 
 export const pickMediumMove = (snapshot: GameSnapshot, aiPlayer: Player): LegalMove | null =>
   pickBestMove(snapshot, aiPlayer, {
-    maxDepth: 3,
+    maxDepth: 1,
     useAlphaBeta: false
   });
 
