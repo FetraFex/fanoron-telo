@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 interface PlayerCardProps {
   player: "X" | "O";
   label: string;
@@ -8,10 +10,12 @@ interface PlayerCardProps {
 
 export const PlayerCard = ({ player, label, type, isActive, piecesInHand }: PlayerCardProps) => {
   return (
-    <div
-      className={`rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 ${
+    <motion.div
+      className={`rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ${
         isActive ? "bg-[#264F2A] text-white" : "bg-[#F8F3EC] text-[#2E2E2E]"
       }`}
+      animate={isActive ? { scale: 1.02 } : { scale: 1 }}
+      transition={{ duration: 0.2, ease: [0.33, 1, 0.68, 1] }}
     >
       <div className="flex items-center gap-4">
         <span
@@ -32,12 +36,21 @@ export const PlayerCard = ({ player, label, type, isActive, piecesInHand }: Play
         </div>
 
         {isActive && (
-          <span className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#8CC63E] animate-pulse" />
+          <motion.span
+            className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90"
+            initial={{ opacity: 0.7 }}
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.span
+              className="h-1.5 w-1.5 rounded-full bg-[#8CC63E]"
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
             Actif
-          </span>
+          </motion.span>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

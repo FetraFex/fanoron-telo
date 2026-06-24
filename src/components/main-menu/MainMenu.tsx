@@ -1,14 +1,20 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { MenuButton } from "./MenuButton";
 import { BottomNav } from "./BottomNav";
 import { BoardSection } from "./BoardSection";
 import { LeavesOverlay } from "./LeavesOverlay";
 import { GameTitle } from "./GameTitle";
 import { DifficultySelection } from "./DifficultySelection";
+import { useHoverSound } from "../../hooks/useHoverSound";
+import { useSound } from "../../hooks/useSound";
+import { fadeIn, logoReveal, fadeSlideLeft, staggerContainer } from "../../animations";
 import type { GameMode, GameOptions } from "../../types/game";
 
 interface MainMenuProps {
   onStart: (options: GameOptions) => void;
+  muted: boolean;
+  onToggleMute: () => void;
 }
 
 const BUTTONS = [
@@ -68,9 +74,12 @@ function RobotIcon() {
   );
 }
 
-export const MainMenu = ({ onStart }: MainMenuProps) => {
+export const MainMenu = ({ onStart, muted, onToggleMute }: MainMenuProps) => {
   const [active, setActive] = useState<GameMode>("PVP");
   const [screen, setScreen] = useState<"menu" | "difficulty">("menu");
+  const playHover = useHoverSound();
+  const playSelection = useSound("/selection.wav");
+  const playConfirmation = useSound("/confirmation.wav");
 
   const handleStart = () => {
     if (active === "PVP") {
@@ -96,50 +105,62 @@ export const MainMenu = ({ onStart }: MainMenuProps) => {
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-fanorona-bg">
-      <img
+    <motion.div
+      className="relative h-screen w-screen overflow-hidden bg-fanorona-bg"
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.img
         src="/background.png"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         style={{ zIndex: 0 }}
+        variants={fadeIn}
       />
 
       <LeavesOverlay />
 
       <div className="relative z-[2] flex h-full flex-col md:flex-row">
         <div className="relative flex w-full flex-col px-6 py-8 md:w-[48%] md:pl-48 md:pr-12 md:pt-24 md:pb-10">
-          <GameTitle />
+          <motion.div variants={logoReveal}>
+            <GameTitle />
+          </motion.div>
 
-          <nav className="flex flex-col gap-3">
+          <motion.nav
+            className="flex flex-col gap-3"
+            variants={staggerContainer}
+          >
             {BUTTONS.map((btn) => (
-              <MenuButton
-                key={btn.id}
-                icon={btn.icon}
-                label={btn.label}
-                subtitle={btn.subtitle}
-                badge={btn.badge}
-                isActive={active === btn.id}
-                onClick={() => setActive(btn.id)}
-              />
+              <motion.div key={btn.id} variants={fadeSlideLeft}>
+                <MenuButton
+                  icon={btn.icon}
+                  label={btn.label}
+                  subtitle={btn.subtitle}
+                  badge={btn.badge}
+                  isActive={active === btn.id}
+                  onClick={() => { setActive(btn.id); playSelection(); }}
+                />
+              </motion.div>
             ))}
-          </nav>
+          </motion.nav>
 
           <div className="mt-6 flex justify-center md:justify-start">
             <button
               type="button"
-              onClick={handleStart}
+              onClick={() => { playConfirmation(); handleStart(); }}
+              onMouseEnter={playHover}
               className="rounded-xl bg-fanorona-green px-10 py-4 text-base font-bold uppercase tracking-wide text-white transition-colors duration-150 hover:bg-fanorona-green/90"
             >
               Lancer la partie
             </button>
           </div>
 
-          <BottomNav />
+          <BottomNav muted={muted} onToggleMute={onToggleMute} />
         </div>
 
-        <BoardSection />
+          <BoardSection />
       </div>
-    </div>
+    </motion.div>
   );
 };

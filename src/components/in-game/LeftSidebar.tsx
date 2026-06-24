@@ -1,17 +1,18 @@
 import { PlayerCard } from "./PlayerCard";
 import type { GameSnapshot, PlayerConfig } from "../../types/game";
+import type { GameMode } from "../../types/game";
 
 interface LeftSidebarProps {
   snapshot: GameSnapshot;
   players: Record<"X" | "O", PlayerConfig>;
-  onBackHome: () => void;
+  mode: GameMode;
 }
 
-export const LeftSidebar = ({ snapshot, players, onBackHome }: LeftSidebarProps) => {
+export const LeftSidebar = ({ snapshot, players, mode }: LeftSidebarProps) => {
   const { currentPlayer, piecesInHand } = snapshot;
 
   return (
-    <div className="flex w-[260px] shrink-0 flex-col gap-4">
+    <div className="flex flex-1 flex-col gap-4">
       <PlayerCard
         player="X"
         label={players.X.type === "ai" ? `IA X (${players.X.difficulty})` : "Joueur X"}
@@ -34,23 +35,13 @@ export const LeftSidebar = ({ snapshot, players, onBackHome }: LeftSidebarProps)
         piecesInHand={piecesInHand.O}
       />
 
-      <div className="mt-2 rounded-2xl bg-[#264F2A] p-5 shadow-md">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-[#8CC63E]/80">Objectif</h4>
-        <p className="mt-2 text-sm leading-relaxed text-white/85">
-          Capturer tous les pions adverses ou bloquer tous les mouvements légaux.
+      <div className="mt-2 rounded-2xl bg-[#264F2A] p-5 text-center shadow-md">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[#8CC63E]/80">Mode</h4>
+        <p className="mt-2 text-lg font-bold text-white">
+          {mode === "PVP" ? "Joueur contre Joueur" : mode === "PVAI" ? "Joueur contre IA" : "IA contre IA"}
         </p>
       </div>
 
-      <div className="mt-auto flex flex-col gap-2 pt-4">
-        <button
-          type="button"
-          onClick={onBackHome}
-          className="flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Quitter
-        </button>
-      </div>
     </div>
   );
 };
