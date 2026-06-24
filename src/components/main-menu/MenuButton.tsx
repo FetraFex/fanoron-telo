@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./MenuButton.module.css";
 
 interface MenuButtonProps {
   icon: ReactNode;
@@ -14,9 +15,9 @@ export const MenuButton = ({ icon, label, subtitle, badge, isActive, onClick }: 
     <button
       type="button"
       onClick={onClick}
-      className={`relative flex w-full items-center gap-4 rounded-xl px-[18px] py-3.5 text-left transition-colors duration-150 ease-in-out md:w-3/4 ${
+      className={`${styles["menu-btn"]} ${isActive ? styles["btn-active"] : ""} relative flex w-full items-center gap-4 rounded-xl px-[18px] py-6 text-left md:w-3/4 ${
         isActive
-          ? "bg-fanorona-green text-white"
+          ? "text-white"
           : "bg-fanorona-btn-idle text-fanorona-brown"
       }`}
     >
