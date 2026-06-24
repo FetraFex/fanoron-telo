@@ -1,0 +1,152 @@
+import { useState } from "react";
+import { MenuButton } from "./MenuButton";
+import { BottomNav } from "./BottomNav";
+import { BoardSection } from "./BoardSection";
+import { LeavesOverlay } from "./LeavesOverlay";
+import { GameTitle } from "./GameTitle";
+import type { GameMode, GameOptions, Difficulty } from "../../types/game";
+
+interface MainMenuProps {
+  onStart: (options: GameOptions) => void;
+}
+
+const BUTTONS = [
+  {
+    id: "PVP" as GameMode,
+    label: "JOUEUR VS JOUEUR",
+    subtitle: "Deux joueurs sur le même écran",
+    badge: undefined,
+    icon: <UsersIcon />
+  },
+  {
+    id: "PVAI" as GameMode,
+    label: "JOUEUR VS IA",
+    subtitle: "Solo contre l'ordinateur",
+    badge: undefined,
+    icon: <UserBoltIcon />
+  },
+  {
+    id: "AIVSAI" as GameMode,
+    label: "IA VS IA",
+    subtitle: "Regarder les IA jouer",
+    badge: "DEMO",
+    icon: <RobotIcon />
+  }
+];
+
+function UsersIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function UserBoltIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="m19 8-3 4h4l-3 4" />
+    </svg>
+  );
+}
+
+function RobotIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="18" height="10" x="3" y="11" rx="2" />
+      <circle cx="12" cy="5" r="2" />
+      <path d="M12 7v4" />
+      <line x1="8" x2="8" y1="16" y2="16" />
+      <line x1="16" x2="16" y1="16" y2="16" />
+    </svg>
+  );
+}
+
+export const MainMenu = ({ onStart }: MainMenuProps) => {
+  const [active, setActive] = useState<GameMode>("PVP");
+
+  const handleStart = () => {
+    if (active === "PVP") {
+      onStart({
+        mode: "PVP",
+        aiVsAiDelayMs: 420,
+        players: { X: { type: "human" }, O: { type: "human" } }
+      });
+      return;
+    }
+
+    if (active === "PVAI") {
+      onStart({
+        mode: "PVAI",
+        aiVsAiDelayMs: 420,
+        players: {
+          X: { type: "human" },
+          O: { type: "ai", difficulty: "medium" as Difficulty }
+        }
+      });
+      return;
+    }
+
+    onStart({
+      mode: "AIVSAI",
+      aiVsAiDelayMs: 420,
+      players: {
+        X: { type: "ai", difficulty: "easy" as Difficulty },
+        O: { type: "ai", difficulty: "hard" as Difficulty }
+      }
+    });
+  };
+
+  return (
+    <div className="relative h-screen w-screen overflow-hidden bg-fanorona-bg">
+      <img
+        src="/background.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        style={{ zIndex: 0 }}
+      />
+
+      <LeavesOverlay />
+
+      <div className="relative z-[2] flex h-full flex-col md:flex-row">
+        <div className="relative flex w-full flex-col px-6 py-8 md:w-[48%] md:px-12 md:py-10">
+          <GameTitle />
+
+          <nav className="flex flex-col gap-3">
+            {BUTTONS.map((btn) => (
+              <MenuButton
+                key={btn.id}
+                icon={btn.icon}
+                label={btn.label}
+                subtitle={btn.subtitle}
+                badge={btn.badge}
+                isActive={active === btn.id}
+                onClick={() => setActive(btn.id)}
+              />
+            ))}
+          </nav>
+
+          <div className="mt-8 flex justify-center md:justify-start">
+            <button
+              type="button"
+              onClick={handleStart}
+              className="rounded-xl bg-fanorona-green px-8 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-150 hover:bg-fanorona-green/90"
+            >
+              Lancer la partie
+            </button>
+          </div>
+
+          <BottomNav />
+        </div>
+
+        <BoardSection />
+      </div>
+    </div>
+  );
+};

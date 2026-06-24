@@ -13,6 +13,15 @@ const config: Config = {
         accent: {
           DEFAULT: "#0ea5e9",
           soft: "#7dd3fc"
+        },
+        fanorona: {
+          bg: "#F5EFE0",
+          "btn-idle": "#F0E8D8",
+          green: "#2D5A27",
+          brown: "#3B1F0A",
+          amber: "#C8842A",
+          muted: "#8B6A4A",
+          separator: "#C4A882"
         }
       },
       boxShadow: {

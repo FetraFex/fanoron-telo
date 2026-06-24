@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "./hooks/useTheme";
 import { GamePage } from "./pages/GamePage";
-import { HomePage } from "./pages/HomePage";
+import { MainMenu } from "./components/main-menu";
 import { readStats, registerFinishedGame } from "./services/statsService";
 import type { GameOptions } from "./types/game";
 
@@ -19,10 +19,7 @@ const App = () => {
 
   if (!inGame) {
     return (
-      <HomePage
-        stats={stats}
-        theme={theme}
-        onToggleTheme={toggleTheme}
+      <MainMenu
         onStart={(newOptions) => {
           setOptions(newOptions);
           setInGame(true);
