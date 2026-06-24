@@ -3,10 +3,11 @@ import type { GameSnapshot } from "../../types/game";
 
 interface VictoryOverlayProps {
   snapshot: GameSnapshot;
+  onRestart: () => void;
   onBackHome: () => void;
 }
 
-export const VictoryOverlay = ({ snapshot, onBackHome }: VictoryOverlayProps) => {
+export const VictoryOverlay = ({ snapshot, onRestart, onBackHome }: VictoryOverlayProps) => {
   const { winner, isDraw } = snapshot;
   const show = winner !== null || isDraw;
 
@@ -36,16 +37,28 @@ export const VictoryOverlay = ({ snapshot, onBackHome }: VictoryOverlayProps) =>
                 ? "Aucun vainqueur, partie terminée."
                 : "Félicitations pour cette victoire !"}
             </p>
-            <motion.button
-              type="button"
-              onClick={onBackHome}
-              className="rounded-xl bg-[#264F2A] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              transition={{ duration: 0.15 }}
-            >
-              Retour au menu
-            </motion.button>
+            <div className="flex gap-3">
+              <motion.button
+                type="button"
+                onClick={onRestart}
+                className="rounded-xl bg-fanorona-green px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+              >
+                Revanche
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={onBackHome}
+                className="rounded-xl bg-[#264F2A] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+              >
+                Retour au menu
+              </motion.button>
+            </div>
           </motion.div>
         </motion.div>
       )}

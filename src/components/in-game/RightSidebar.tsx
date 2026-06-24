@@ -76,18 +76,15 @@ export const RightSidebar = ({ snapshot, selectedCell, moveCount, onUndo, canUnd
         </div>
       </div>
 
-      <motion.button
-        type="button"
-        onClick={onUndo}
-        disabled={!canUndo}
-        className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
-        whileHover={canUndo ? { scale: 1.02, rotate: -5 } : undefined}
-        whileTap={canUndo ? { scale: 0.96 } : undefined}
-        transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        Annuler le coup
-      </motion.button>
+        <button
+          type="button"
+          onClick={onUndo}
+          disabled={!canUndo}
+          className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Annuler le coup
+        </button>
     </div>
   );
 };

@@ -7,13 +7,15 @@ import type { GameOptions, GameSnapshot } from "../types/game";
 interface GamePageProps {
   options: GameOptions;
   stats: GameStats;
+  muted: boolean;
+  onToggleMute: () => void;
   onGameFinished: (snapshot: GameSnapshot) => void;
   onBackHome: () => void;
   onToggleTheme: () => void;
   theme: "light" | "dark";
 }
 
-export const GamePage = ({ options, stats, onGameFinished, onBackHome, onToggleTheme, theme }: GamePageProps) => {
+export const GamePage = ({ options, stats, muted, onToggleMute, onGameFinished, onBackHome, onToggleTheme, theme }: GamePageProps) => {
   const { snapshot, selectedCell, legalTargets, canUndo, canRedo, handleCellClick, undo, redo, restart } =
     useFanoronaGame(options);
   const reportedKeyRef = useRef<string>("");
@@ -40,6 +42,8 @@ export const GamePage = ({ options, stats, onGameFinished, onBackHome, onToggleT
       players={options.players}
       mode={options.mode}
       stats={stats}
+      muted={muted}
+      onToggleMute={onToggleMute}
       onCellClick={handleCellClick}
       onUndo={undo}
       onRedo={redo}

@@ -35,7 +35,9 @@ const App = () => {
         <GamePage
           options={options}
           stats={stats}
+          muted={muted}
           theme={theme}
+          onToggleMute={() => setMuted((m) => !m)}
           onToggleTheme={toggleTheme}
           onGameFinished={(snapshot) => {
             setStats(registerFinishedGame(snapshot));

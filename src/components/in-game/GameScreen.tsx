@@ -19,6 +19,8 @@ interface GameScreenProps {
   players: Record<"X" | "O", PlayerConfig>;
   mode: GameMode;
   stats: GameStats;
+  muted: boolean;
+  onToggleMute: () => void;
   onCellClick: (index: number) => void;
   onUndo: () => void;
   onRedo: () => void;
@@ -37,8 +39,11 @@ export const GameScreen = ({
   players,
   mode,
   stats,
+  muted,
+  onToggleMute,
   onCellClick,
   onUndo,
+  onRestart,
   onBackHome,
 }: GameScreenProps) => {
   const { currentPlayer, piecesInHand, moveHistory } = snapshot;
@@ -78,17 +83,45 @@ export const GameScreen = ({
             piecesO={piecesInHand.O}
           />
 
-          <motion.button
-            type="button"
-            onClick={onBackHome}
-            className="justify-self-end flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Quitter
-          </motion.button>
+          <div className="justify-self-end flex items-center gap-2">
+            <motion.button
+              type="button"
+              onClick={onToggleMute}
+              className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#F8F3EC] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
+              aria-label={muted ? "Activer la musique" : "Couper la musique"}
+            >
+              {muted ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#676767" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#676767" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
+              )}
+            </motion.button>
+            <motion.button
+              type="button"
+              onClick={onRestart}
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Rematch
+            </motion.button>
+            <motion.button
+              type="button"
+              onClick={onBackHome}
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#F8F3EC] px-4 py-3 text-sm font-semibold text-[#676767] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ duration: 0.15, ease: [0.33, 1, 0.68, 1] }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Quitter
+            </motion.button>
+          </div>
         </motion.header>
 
         <div className="flex flex-1 flex-col">
@@ -150,7 +183,7 @@ export const GameScreen = ({
         </div>
       </div>
 
-      <VictoryOverlay snapshot={snapshot} onBackHome={onBackHome} />
+      <VictoryOverlay snapshot={snapshot} onRestart={onRestart} onBackHome={onBackHome} />
     </div>
   );
 };
