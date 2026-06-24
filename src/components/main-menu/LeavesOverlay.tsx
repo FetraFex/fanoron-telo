@@ -6,7 +6,7 @@ export const LeavesOverlay = () => {
       src="/corner-leaves.png"
       alt=""
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 h-full w-full object-fill"
+      className="pointer-events-none fixed inset-0 hidden h-full w-full object-cover md:block"
       style={{ zIndex: 10 }}
       initial={{ opacity: 0, x: 120 }}
       animate={{ opacity: 1, x: 0 }}

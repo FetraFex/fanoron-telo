@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export const BoardSection = () => {
   return (
     <motion.div
-      className="absolute bottom-0 right-0 top-0 flex w-[55%] items-center justify-center overflow-visible"
+      className="hidden lg:flex absolute bottom-0 right-0 top-0 w-[55%] items-center justify-center overflow-visible"
       style={{ zIndex: 1 }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}

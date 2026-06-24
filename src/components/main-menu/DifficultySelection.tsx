@@ -99,7 +99,7 @@ export const DifficultySelection = ({ mode, onStart, onBack }: DifficultySelecti
         </motion.div>
 
         <motion.h2
-          className="mb-6 text-center text-[28px] font-semibold tracking-[1px] text-[#4A2A18] md:text-[36px]"
+          className="mb-6 text-center text-xl font-semibold tracking-[1px] text-[#4A2A18] sm:text-2xl md:text-[36px]"
           variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.33, 1, 0.68, 1] } } }}
         >
           {mode === "AIVSAI" ? "Choisir la difficulté IA" : "Sélectionner la difficulté"}
@@ -131,7 +131,7 @@ export const DifficultySelection = ({ mode, onStart, onBack }: DifficultySelecti
             type="button"
             onClick={() => { playConfirmation(); handleStart(); }}
             onMouseEnter={playHover}
-            className="flex items-center gap-3 rounded-2xl bg-fanorona-green px-12 py-5 text-lg font-bold uppercase tracking-wide text-white shadow-lg"
+            className="flex items-center gap-3 rounded-2xl bg-fanorona-green px-8 py-4 text-base font-bold uppercase tracking-wide text-white shadow-lg sm:px-12 sm:py-5 sm:text-lg"
             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
             whileTap={{ scale: 0.96, transition: { duration: 0.12 } }}
           >
@@ -143,7 +143,7 @@ export const DifficultySelection = ({ mode, onStart, onBack }: DifficultySelecti
             type="button"
             onClick={onBack}
             onMouseEnter={playHover}
-            className="flex w-[220px] items-center justify-center gap-2 rounded-2xl bg-fanorona-btn-idle px-8 py-4 text-sm font-bold uppercase tracking-wide text-fanorona-brown transition-colors duration-150 hover:bg-fanorona-btn-idle/80"
+            className="flex w-full max-w-[220px] items-center justify-center gap-2 rounded-2xl bg-fanorona-btn-idle px-6 py-4 text-sm font-bold uppercase tracking-wide text-fanorona-brown transition-colors duration-150 hover:bg-fanorona-btn-idle/80 sm:w-[220px] sm:px-8"
           >
             ← Retour
           </button>

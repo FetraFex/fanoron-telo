@@ -26,11 +26,11 @@ interface BottomNavProps {
 
 export const BottomNav = ({ muted, onToggleMute }: BottomNavProps) => {
   return (
-    <nav className="mt-auto flex items-center text-[11px] uppercase tracking-[0.1em] text-fanorona-muted">
+    <nav className="mt-auto flex items-center py-2 text-[11px] uppercase tracking-[0.1em] text-fanorona-muted sm:text-xs">
       <button
         type="button"
         onClick={onToggleMute}
-        className="flex items-center gap-1.5 transition-colors duration-150 hover:text-fanorona-brown"
+        className="flex items-center gap-1.5 p-2 transition-colors duration-150 hover:text-fanorona-brown"
         aria-label={muted ? "Activer la musique" : "Couper la musique"}
       >
         {muted ? <MusicOffIcon /> : <MusicOnIcon />}

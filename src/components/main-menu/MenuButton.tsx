@@ -20,7 +20,7 @@ export const MenuButton = ({ icon, label, subtitle, badge, isActive, onClick }: 
       type="button"
       onClick={onClick}
       onMouseEnter={playHover}
-      className={`${styles["menu-btn"]} ${isActive ? styles["btn-active"] : ""} relative flex w-full items-center gap-4 rounded-xl px-[18px] py-6 text-left md:w-3/4 ${
+      className={`${styles["menu-btn"]} ${isActive ? styles["btn-active"] : ""} relative flex w-full items-center gap-3 rounded-xl px-4 py-5 text-left sm:gap-4 sm:px-[18px] sm:py-6 lg:w-3/4 ${
         isActive
           ? "text-white"
           : "bg-fanorona-btn-idle text-fanorona-brown"

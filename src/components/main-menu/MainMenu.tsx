@@ -121,8 +121,8 @@ export const MainMenu = ({ onStart, muted, onToggleMute }: MainMenuProps) => {
 
       <LeavesOverlay />
 
-      <div className="relative z-[2] flex h-full flex-col md:flex-row">
-        <div className="relative flex w-full flex-col px-6 py-8 md:w-[48%] md:pl-48 md:pr-12 md:pt-24 md:pb-10">
+      <div className="relative z-[2] flex h-full flex-col lg:flex-row">
+        <div className="relative flex w-full flex-col px-6 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12 lg:w-[48%] lg:pl-32 lg:pr-12 lg:pt-20 xl:pl-48 xl:pt-24">
           <motion.div variants={logoReveal}>
             <GameTitle />
           </motion.div>
@@ -145,12 +145,12 @@ export const MainMenu = ({ onStart, muted, onToggleMute }: MainMenuProps) => {
             ))}
           </motion.nav>
 
-          <div className="mt-6 flex justify-center md:justify-start">
+          <div className="mt-6 flex justify-center lg:justify-start">
             <button
               type="button"
               onClick={() => { playConfirmation(); handleStart(); }}
               onMouseEnter={playHover}
-              className="rounded-xl bg-fanorona-green px-10 py-4 text-base font-bold uppercase tracking-wide text-white transition-colors duration-150 hover:bg-fanorona-green/90"
+              className="w-full rounded-xl bg-fanorona-green px-6 py-4 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-150 hover:bg-fanorona-green/90 sm:w-auto sm:px-10 sm:py-4 sm:text-base"
             >
               Lancer la partie
             </button>
