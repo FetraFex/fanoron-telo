@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import type { CellValue } from "../../types/game";
 
 interface InGameBoardProps {
@@ -33,11 +33,6 @@ const pieceStroke = (value: CellValue, selected: boolean): string => {
   return "none";
 };
 
-const pieceFilter = (value: CellValue, selected: boolean): string | undefined => {
-  if (selected) return "url(#glow)";
-  return undefined;
-};
-
 const pieceShadowClass = (value: CellValue, selected: boolean): string => {
   if (value === "X") return selected ? "drop-shadow-[0_0_8px_rgba(140,198,62,0.5)]" : "drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]";
   if (value === "O") return selected ? "drop-shadow-[0_0_8px_rgba(140,198,62,0.5)]" : "drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]";
@@ -57,7 +52,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
       </div>
 
       <svg
-        className="absolute inset-0 h-full w-full pointer-events-none"
+        className="absolute inset-0 h-full w-full"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
@@ -71,14 +66,16 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
           </filter>
         </defs>
 
-        <line x1="16.67" y1="16.67" x2="83.33" y2="16.67" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="16.67" y1="50" x2="83.33" y2="50" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="16.67" y1="83.33" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="16.67" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="50" y1="16.67" x2="50" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="83.33" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="16.67" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
-        <line x1="83.33" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+        <g pointerEvents="none">
+          <line x1="16.67" y1="16.67" x2="83.33" y2="16.67" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="16.67" y1="50" x2="83.33" y2="50" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="16.67" y1="83.33" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="16.67" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="50" y1="16.67" x2="50" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="83.33" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="16.67" y1="16.67" x2="83.33" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+          <line x1="83.33" y1="16.67" x2="16.67" y2="83.33" stroke="#1a1a1a" strokeWidth="0.3" opacity="0.7" />
+        </g>
 
         {POSITIONS.map(({ idx, x, y }) => {
           const value = board[idx];
@@ -87,14 +84,9 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
           const isPossibleTarget = isTarget && value === null;
 
           return (
-          <motion.g
-            key={idx}
-            className="pointer-events-auto cursor-pointer"
-            onClick={() => onCellClick(idx)}
-            whileHover={value ? { scale: 1.08, transition: { duration: 0.12 } } : undefined}
-            whileTap={{ scale: 0.96, transition: { duration: 0.12 } }}
-            style={{ transformOrigin: `${x}% ${y}%` }}
-          >
+          <g key={idx} className="pointer-events-auto cursor-pointer">
+            <circle cx={x} cy={y} r={PIECE_RADIUS + 2.5} fill="rgba(0,0,0,0.001)" onClick={() => onCellClick(idx)} />
+
             {isPossibleTarget && (
               <circle cx={x} cy={y} r={2.5} fill="#8CC63E" opacity="0.4" />
             )}
@@ -111,11 +103,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
                   filter={selected ? "url(#glow)" : undefined}
                   className={pieceShadowClass(value, selected)}
                   initial={false}
-                  animate={
-                    selected
-                      ? { r: PIECE_RADIUS + 1 }
-                      : { r: PIECE_RADIUS }
-                  }
+                  animate={selected ? { r: PIECE_RADIUS + 1 } : { r: PIECE_RADIUS }}
                   transition={selected ? { duration: 0.25, ease: [0.33, 1, 0.68, 1] } : { duration: 0.2 }}
                 />
 
@@ -132,7 +120,7 @@ export const InGameBoard = ({ board, selectedCell, legalTargets, onCellClick }: 
                 )}
               </>
             )}
-          </motion.g>
+          </g>
           );
         })}
       </svg>
